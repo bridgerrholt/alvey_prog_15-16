@@ -3,4 +3,4 @@ sftp-config.json
 *.o
 *.exe
 *.app
-*mad_lib_game
+mad_lib_game/mad_lib_game
