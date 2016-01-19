@@ -3,4 +3,5 @@ sftp-config.json
 *.o
 *.exe
 *.app
+binary_search/binary_search
 mad_lib_game/mad_lib_game

@@ -8,10 +8,9 @@
 #include <chrono>
 
 
-#include "get_lowered.h"
-#include "rand_range.h"
-
-#include "get_stripped_input.h"
+#include <get_lowered.h>
+#include <rand_range.h>
+#include <get_stripped_input.h>
 
 #include "file_selector.h"
 #include "manager.h"

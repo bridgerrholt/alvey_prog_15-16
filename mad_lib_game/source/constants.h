@@ -3,8 +3,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include "color_codes.h"
-#include "operating_system.h"
+#include <color_codes.h>
+#include <operating_system.h>
 
 namespace constants
 {

@@ -1,8 +1,3 @@
-#include "manager.h"
-#include "get_stripped_input.h"
-
-#include "constants.h"
-
 #include <exception>
 
 #include <iostream>
@@ -10,6 +5,12 @@
 
 #include <string>
 #include <vector>
+
+#include <get_stripped_input.h>
+
+#include "manager.h"
+#include "constants.h"
+
 
 extern const ColorCodes G_COLOR_CODES;
 
