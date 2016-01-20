@@ -11,7 +11,9 @@
 
 #include "manager.h"
 
-extern const ColorCodes G_COLOR_CODES;
+extern const ColorCodes constants::G_COLOR_CODES;
+
+using namespace constants;
 
 Manager::Manager(std::string fileName)
 {
@@ -85,8 +87,7 @@ void Manager::run()
 	for (std::size_t i = 0; i < storyTexts_.size()-1; ++i) {
 		// [story text][underline][input object][reset]
 		std::cout << storyTexts_[i] <<
-			constants::G_COLOR_CODES.underline << inputObjects_[i].content <<
-			constants::G_COLOR_CODES.reset;
+			G_COLOR_CODES.doU(inputObjects_[i].content);
 	}
 	std::cout << storyTexts_[storyTexts_.size()-1] << '\n';
 	std::cout << std::endl;

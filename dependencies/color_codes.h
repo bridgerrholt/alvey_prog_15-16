@@ -10,6 +10,11 @@ class ColorCodes
 public:
 	ColorCodes();
 
+	// Bolds a string.
+	std::string doB(const std::string& inString) const;
+	// Underlines a string.
+	std::string doU(const std::string& inString) const;
+
 	// A set of colors for different kinds of codes.
 	class ColorSet
 	{

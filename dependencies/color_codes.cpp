@@ -52,3 +52,29 @@ ColorCodes::ColorCodes()
 		"\e[47m"
 	};
 }
+
+
+
+std::string ColorCodes::doB(const std::string& inString) const
+{
+	return bold + inString + reset;
+}
+
+
+
+std::string ColorCodes::doU(const std::string& inString) const
+{
+	return underline + inString + reset;
+}
+
+
+
+
+
+
+
+
+
+
+
+
