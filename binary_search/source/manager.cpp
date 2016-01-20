@@ -1,3 +1,4 @@
+#include <math.h>
 #include <exception>
 
 #include <iostream>
@@ -5,10 +6,13 @@
 
 #include <get_stripped_input.h>
 #include <is_integer.h>
+#include <constants.h>
 
 #include "manager.h"
 
-Manager::Manager()
+extern const ColorCodes G_COLOR_CODES;
+
+Manager::Manager() : guessCount_(0)
 {
 	// Ask for the range.
 	std::cout << "Enter the range (min,max):\n";
@@ -104,35 +108,82 @@ Manager::Manager()
 		// Set difference_.
 		calculateDifference();
 
-		// If no difference, give the answer.
+		// If the maximum is the minimum, that's the answer.
 		if (difference_ == 0) {
 			answer = min_;
 			break;
 		}
 
+		// Otherwise, guess again.
+		makeGuess();
+
 	}
+
+	// Display their answer and the amount of guesses.
+	// Only be plural if multiple guesses.
+	std::string guessString = "guess";
+	if (guessCount_ > 1)
+		guessString += "es";
+
+	std::cout << "\nYour number is " <<
+		constants::G_COLOR_CODES.bold << answer <<
+		constants::G_COLOR_CODES.reset << "! (took " <<
+		guessCount_ << " " << guessString << ")\n";
 }
 
 
 
 void Manager::makeGuess()
 {
-	// Ask for the guess.
-	std::cout << "Make a guess:\n";
-	std::string strippedInput;
+	// Increment the guess counter.
+	++guessCount_;
+
+	// Pick the number directly in the middle.
+	Number guess = min_ + floor(difference_/2.0);
+
+	// If this is their first time,
+	// ask if it's greater than or less than their number.
+	if (guessCount_ == 1) {
+		std::cout << "Is " <<
+			constants::G_COLOR_CODES.bold << guess <<
+			constants::G_COLOR_CODES.reset <<
+			" greater than, less than, or equal to your number? (> < =):\n";
+	}
 
 	while (true) {
-		// Get the input.
-		std::cout << " ";
-		strippedInput = getStrippedInput();
-
+		// Reset the fail_ flag, it may be used.
 		resetFail();
 
-		// Fail if no data inputted.
-		if (strippedInput == "") {
-			makeError("Must have a value.");
+		// Get the input.
+		std::cout <<
+			constants::G_COLOR_CODES.bold << guess <<
+			constants::G_COLOR_CODES.reset << " is ";
+		std::string strippedInput = getStrippedInput();
+
+		if (strippedInput == ">") {
+			max_ = guess-1;
+		}
+		else if (strippedInput == "<") {
+			min_ = guess+1;
+		}
+		else if (strippedInput == "=") {
+			min_ = guess;
+			max_ = guess;
+		}
+
+		// Fail if not > < =.
+		else {
+			// Fail if no data inputted.
+			if (strippedInput == "") {
+				makeError("Must have an input.");
+				continue;
+			}
+
+			makeError("Must be '>', '<', or '='.");
 			continue;
 		}
+
+		break;
 	}
 }
 

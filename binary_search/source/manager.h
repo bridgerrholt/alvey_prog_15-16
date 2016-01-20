@@ -35,6 +35,9 @@ private:
 	Number max_;
 	Number difference_;
 
+	// Incremented every makeGuess called.
+	std::size_t guessCount_;
+
 };
 
 #endif
