@@ -34,8 +34,8 @@ Manager::Manager() : guessCount_(0)
 
 		// Parse through, fail if ',' is not found.
 		for (auto i = strippedInput.begin(); i != strippedInput.end(); ++i) {
-			// If ',' hasn't been found yet, look for it and,
-			// if it's not found, add to minString.
+			// If ',' hasn't been found yet, look for it and
+			// if it's not found add to minString.
 			if (!foundDivisor) {
 				// If it's not the first
 				if (*i == ',') {

@@ -14,6 +14,7 @@ int main(int argc, char* argv[])
 {
 	// The main game loop, quit on prompt.
 	while (true) {
+		// The manager constructor handles a whole game of guessing.
 		Manager manager;
 
 		// If they put 'n', quit.

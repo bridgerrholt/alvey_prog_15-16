@@ -21,7 +21,7 @@ Manager::Manager(std::string fileName)
 	std::string currentString = "";
 
 	// Load and parse the file.
-	// Note: not true "parsing"
+	// Note: not true "parsing".
 	try {
 		// Load the file.
 		std::ifstream file(fileName);

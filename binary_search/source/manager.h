@@ -8,7 +8,7 @@
 class Manager
 {
 public:
-	// Asks for the range.
+	// Runs the game.
 	Manager();
 
 private:
@@ -24,6 +24,9 @@ private:
 	// Sets fail_ to false;
 	void resetFail();
 
+	// All the error checking functions.
+	void checkEmptyValue(std::string input, std::string name);
+
 	// Sets the difference appropriately.
 	void calculateDifference();
 
@@ -35,7 +38,7 @@ private:
 	Number max_;
 	Number difference_;
 
-	// Incremented every makeGuess called.
+	// Incremented every time makeGuess is called.
 	std::size_t guessCount_;
 
 };
