@@ -1,21 +1,24 @@
+// Holds the main function.
+// Runs a loop that creates a Manager object (causing one game to run),
+// then asks the player if they want to quit.
+
 #include <iostream>
-#include <exception>
-#include <vector>
-#include <queue>
+#include <string>
 
 #include <get_stripped_input.h>
-#include <is_unsigned_integer.h>
-#include <rand_range.h>
 #include <get_lowered.h>
 
 #include "manager.h"
 
 int main(int argc, char* argv[])
 {
+	// The object that runs a single game when its "run" method is called.
+	Manager manager;
+
 	// The main game loop, quit on prompt.
 	while (true) {
-		// The manager constructor handles a whole game of guessing.
-		Manager manager;
+		// Handles a whole game of guessing.
+		manager.run();
 
 		// If they put 'n', quit.
 		std::cout << "\nPlay again? (y/n) ";

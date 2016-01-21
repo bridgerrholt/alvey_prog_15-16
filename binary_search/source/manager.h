@@ -1,4 +1,4 @@
-// When created, asks for a range to guess in and runs the process.
+// An object that runs one game when asked to.
 
 #ifndef MANAGER_H
 #define MANAGER_H
@@ -8,8 +8,11 @@
 class Manager
 {
 public:
-	// Runs the game.
+	// Constructors.
 	Manager();
+
+	// Runs a single game.
+	void run();
 
 private:
 	// The type of number to be used for the range.

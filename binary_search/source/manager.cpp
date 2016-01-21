@@ -14,8 +14,14 @@ extern const ColorCodes constants::G_COLOR_CODES;
 
 using namespace constants;
 
-Manager::Manager() : guessCount_(0)
+Manager::Manager() : guessCount_(0), fail_(false)
 {
+
+}
+
+
+
+void Manager::run() {
 	// Ask for the range.
 	std::cout << "Enter the range (min,max):\n";
 	std::string strippedInput;
@@ -127,6 +133,8 @@ Manager::Manager() : guessCount_(0)
 	if (guessCount_ > 1)
 		guessString += "es";
 
+	//std::cout << G_COLOR_CODES.doB("ABC\n");
+
 	std::cout << "\nYour number is " <<
 		G_COLOR_CODES.doB(std::to_string(answer)) << "! (took " <<
 		guessCount_ << " " << guessString << ")\n";
@@ -150,39 +158,56 @@ void Manager::makeGuess()
 			" greater than, less than, or equal to your number? (> < =):\n";
 	}
 
-	while (true) {
-		// Reset the fail_ flag, it may be used.
+	// Execute once, continue to if the fail_ flag is true.
+	do {
+		// Reset the fail_ flag, it is used.
 		resetFail();
 
 		// Get the input.
 		std::cout << G_COLOR_CODES.doB(std::to_string(guess)) << " is ";
 		std::string strippedInput = getStrippedInput();
 
+		// Their number is greater than the guessed number.
 		if (strippedInput == ">") {
-			max_ = guess-1;
+			// If the guess is the minimum value,
+			// it can't be greater than the actual number.
+			if (guess == min_)
+				makeError("This guess is the minimum.");
+
+			else
+				// Since our maximum was too high, set it lower.
+				max_ = guess-1;
 		}
+
+		// Their number is less than the guessed number.
 		else if (strippedInput == "<") {
-			min_ = guess+1;
+			// If the guess is the maximum value,
+			// it can't be less than the actual number.
+			if (guess == max_)
+				makeError("This guess is the maximum.");
+			else
+				// Since our minimum was too low, set it higher.
+				min_ = guess+1;
 		}
+
+		// Their number is equal to the guessed number (game complete).
 		else if (strippedInput == "=") {
+			// Narrow in on the guess.
 			min_ = guess;
 			max_ = guess;
 		}
 
-		// Fail if not > < =.
+		// Fail if not '>', '<', or '='.
 		else {
 			// Fail if no data inputted.
-			if (strippedInput == "") {
+			if (strippedInput == "")
 				makeError("Must have an input.");
-				continue;
-			}
 
-			makeError("Must be '>', '<', or '='.");
-			continue;
+			// Otherwise fail if something else.
+			else
+				makeError("Must be '>', '<', or '='."); 
 		}
-
-		break;
-	}
+	} while (fail_);
 }
 
 

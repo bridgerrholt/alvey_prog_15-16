@@ -55,10 +55,10 @@ ColorCodes::ColorCodes()
 
 
 
-std::string ColorCodes::doB(const std::string& inString) const
+/*std::string ColorCodes::doB(const std::string& inString) const
 {
 	return bold + inString + reset;
-}
+}*/
 
 
 

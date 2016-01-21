@@ -4,6 +4,7 @@
 #define COLOR_CODES_H
 
 #include <string>
+#include "convert_string.h"
 
 class ColorCodes
 {
@@ -11,7 +12,9 @@ public:
 	ColorCodes();
 
 	// Bolds a string.
-	std::string doB(const std::string& inString) const;
+	template<class T>
+	std::string doB(const T& input) const;
+	//std::string doB(const std::string& inString) const;
 	// Underlines a string.
 	std::string doU(const std::string& inString) const;
 
@@ -38,5 +41,13 @@ public:
 	ColorSet underlineSet;
 	ColorSet backgroundSet;
 };
+
+
+
+template<class T>
+std::string ColorCodes::doB(const T& input) const
+{
+	return bold + convertString(input) + reset;
+}
 
 #endif
