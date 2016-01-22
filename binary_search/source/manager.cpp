@@ -67,47 +67,23 @@ void Manager::run() {
 		}
 
 		// Fail if missing a value.
-		if (minString == "") {
-			makeError("Must have a minimum value.");
-		}
-
-		if (maxString == "") {
-			makeError("Must have a maximum value.");
-		}
-
+		checkEmptyValue(minString, "minimum");
+		checkEmptyValue(maxString, "maximum");
 		if (fail_) continue;
 
 		// Fail if the values aren't integers.
-		if (!isInteger(minString)) {
-			makeError("Minimum value must be an integer.");
-		}
-
-		if (!isInteger(maxString)) {
-			makeError("Maximum value must be an integer.");
-		}
-
+		checkValueInteger(minString, "minimum");
+		checkValueInteger(maxString, "maximum");
 		if (fail_) continue;
 
 		// Fail if a value is too small or too large for the Number type.
-		try {
-			min_ = patch::stoi(minString);
-		}
-		catch (std::exception& e) {
-			makeError("Minimum value is out of range.");
-		}
-
-		try {
-			max_ = patch::stoi(maxString);
-		}
-		catch (std::exception& e) {
-			makeError("Maximum value is out of range.");
-		}
-
+		min_ = valueToNumber(minString, "minimum");
+		max_ = valueToNumber(maxString, "maximum");
 		if (fail_) continue;
 
 		// Fail if the minimum value is not less than the maximum value.
 		if (min_ >= max_) {
-			makeError("Minimum value must be less than maximum value.");
+			makeError("The minimum value must be less than the maximum value.");
 			continue;
 		}
 
@@ -228,6 +204,38 @@ void Manager::resetFail()
 	fail_ = false;
 }
 
+
+
+void Manager::checkEmptyValue(std::string input, std::string name)
+{
+	if (input == "") {
+		makeError("Must have a " + name + " value.");
+	}
+}
+
+
+
+void Manager::checkValueInteger(std::string input, std::string name)
+{
+	if (!isInteger(input)) {
+		makeError("Value " + name + " must be an integer.");
+	}
+}
+
+
+
+Manager::Number Manager::valueToNumber(std::string input, std::string name)
+{
+	Number returnNum;
+	try {
+		returnNum = patch::stoi(input);
+	}
+	catch (std::exception& e) {
+		makeError("The " + name + " value is out of range.");
+	}
+
+	return returnNum;
+}
 
 
 

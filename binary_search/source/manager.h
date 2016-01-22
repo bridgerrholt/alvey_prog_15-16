@@ -29,6 +29,8 @@ private:
 
 	// All the error checking functions.
 	void checkEmptyValue(std::string input, std::string name);
+	void checkValueInteger(std::string input, std::string name);
+	Number valueToNumber(std::string input, std::string name);
 
 	// Sets the difference appropriately.
 	void calculateDifference();

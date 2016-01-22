@@ -16,6 +16,8 @@ namespace patch
 		if ((stream >> outInt).fail() || !(stream >> std::ws).eof()) {
 			throw std::bad_cast();
 		}
+
+		return outInt;
 	}
 }
 
