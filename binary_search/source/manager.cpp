@@ -8,6 +8,9 @@
 #include <is_integer.h>
 #include <constants.h>
 
+#include <patch/stoi.h>
+#include <patch/to_string.h>
+
 #include "manager.h"
 
 extern const ColorCodes constants::G_COLOR_CODES;
@@ -87,14 +90,14 @@ void Manager::run() {
 
 		// Fail if a value is too small or too large for the Number type.
 		try {
-			min_ = std::stoi(minString);
+			min_ = patch::stoi(minString);
 		}
 		catch (std::exception& e) {
 			makeError("Minimum value is out of range.");
 		}
 
 		try {
-			max_ = std::stoi(maxString);
+			max_ = patch::stoi(maxString);
 		}
 		catch (std::exception& e) {
 			makeError("Maximum value is out of range.");
@@ -136,7 +139,7 @@ void Manager::run() {
 	//std::cout << G_COLOR_CODES.doB("ABC\n");
 
 	std::cout << "\nYour number is " <<
-		G_COLOR_CODES.doB(std::to_string(answer)) << "! (took " <<
+		G_COLOR_CODES.doB(patch::to_string(answer)) << "! (took " <<
 		guessCount_ << " " << guessString << ")\n";
 }
 
@@ -154,7 +157,7 @@ void Manager::makeGuess()
 	// ask if it's greater than or less than their number.
 	if (guessCount_ == 1) {
 		std::cout << "Is " <<
-			G_COLOR_CODES.doB(std::to_string(guess)) <<
+			G_COLOR_CODES.doB(patch::to_string(guess)) <<
 			" greater than, less than, or equal to your number? (> < =):\n";
 	}
 
@@ -164,7 +167,7 @@ void Manager::makeGuess()
 		resetFail();
 
 		// Get the input.
-		std::cout << G_COLOR_CODES.doB(std::to_string(guess)) << " is ";
+		std::cout << G_COLOR_CODES.doB(patch::to_string(guess)) << " is ";
 		std::string strippedInput = getStrippedInput();
 
 		// Their number is greater than the guessed number.

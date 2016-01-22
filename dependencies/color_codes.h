@@ -4,6 +4,9 @@
 #define COLOR_CODES_H
 
 #include <string>
+
+#include "patch/to_string.h"
+
 #include "convert_string.h"
 
 class ColorCodes
@@ -47,7 +50,7 @@ public:
 template<class T>
 std::string ColorCodes::doB(const T& input) const
 {
-	return bold + convertString(input) + reset;
+	return bold + patch::to_string(input) + reset;
 }
 
 #endif
