@@ -1,6 +1,6 @@
 program_NAME := binary_search
-program_C_SRCS := $(wildcard ../dependencies/*.c source/*.c source/*/*.c)
-program_CXX_SRCS := $(wildcard ../dependencies/*.cpp source/*.cpp source/*/*.cpp)
+program_C_SRCS := $(wildcard ../dependencies/*.c ../dependencies/std/*.c source/*.c source/*/*.c)
+program_CXX_SRCS := $(wildcard ../dependencies/*.cpp ../dependencies/std/*.cpp source/*.cpp source/*/*.cpp)
 program_C_OBJS := ${program_C_SRCS:.c=.o}
 program_CXX_OBJS := ${program_CXX_SRCS:.cpp=.o}
 program_OBJS := $(program_C_OBJS) $(program_CXX_OBJS)
