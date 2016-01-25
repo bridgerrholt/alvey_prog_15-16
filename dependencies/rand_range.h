@@ -4,5 +4,6 @@
 #define RAND_RANGE_H
 
 int randRange(int min, int max);
+unsigned int randRange(unsigned int max);
 
 #endif

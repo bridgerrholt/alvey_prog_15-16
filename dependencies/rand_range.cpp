@@ -9,3 +9,10 @@ int randRange(int min, int max)
 	std::cout << returnVal << '\n';
 	return returnVal;
 }
+
+
+
+unsigned int randRange(unsigned int max)
+{
+	return static_cast <int>(std::rand())/(static_cast <float>(RAND_MAX/max));
+}

@@ -8,7 +8,6 @@ std::string getStrippedInput()
 	std::string inputString;
 	std::getline(std::cin, inputString);
 
-
 	// Becomes true once the first non-white-space character has been found.
 	bool foundBody = false;
 
@@ -45,3 +44,19 @@ std::string getStrippedInput()
 
 	return strippedString;
 }
+
+
+
+
+std::string getStrippedInput(std::string question, std::string ending)
+{
+	std::cout << question << ending;
+	return getStrippedInput();
+}
+
+
+
+
+
+
+
