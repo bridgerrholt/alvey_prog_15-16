@@ -8,6 +8,7 @@
 #include <get_stripped_input.h>
 #include <get_lowered.h>
 
+
 #include "manager.h"
 
 int main(int argc, char* argv[])

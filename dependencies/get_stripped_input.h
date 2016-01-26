@@ -6,6 +6,7 @@
 #include <string>
 
 std::string getStrippedInput();
+
 std::string getStrippedInput(std::string question, std::string ending = "");
 
 #endif

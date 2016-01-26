@@ -47,7 +47,6 @@ std::string getStrippedInput()
 
 
 
-
 std::string getStrippedInput(std::string question, std::string ending)
 {
 	std::cout << question << ending;

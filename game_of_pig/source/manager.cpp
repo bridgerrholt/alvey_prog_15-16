@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 
+#include <input_handler.h>
+
 #include <constants.h>
 #include <rand_range.h>
 #include <get_stripped_input.h>
@@ -33,8 +35,9 @@ void Manager::run()
 	while (playing) {
 		// Run the a turn for all the players.
 		for (std::size_t i = 0; i < points_.size(); ++i) {
-			getStrippedInput(
-				"Player " + G_COLOR_CODES.doB(i+1) + ", press return.");
+			//getStrippedInput(
+			InputHandler::getStrippedInput(
+				"Player " + G_COLOR_CODES.doB(i+1) + ", press return.", false);
 			// If they won this turn, set them as the winner
 			// and exit the game.
 			if (runTurn(i)) {
@@ -82,12 +85,16 @@ bool Manager::runTurn(std::size_t index)
 				break;
 			}
 
-			std::cout << "You have now made " <<
+			/*std::cout << "You have now made " <<
 				G_COLOR_CODES.doB(pointsMade) <<
-				" points this round, roll again? (y/n)\n ";
+				" points this round, roll again? (y/n)\n ";*/
+			std::string input = getLowered(
+				InputHandler::getStrippedInput(
+				"You have now made " +
+				G_COLOR_CODES.doB(pointsMade) +
+				" points this round, roll again? (y/n)"));
 
 			while (true) {
-				std::string input = getLowered(getStrippedInput());
 				if (input == "y") {
 					break;
 				}
@@ -95,7 +102,8 @@ bool Manager::runTurn(std::size_t index)
 					playing = false;
 					break;
 				}
-				std::cout << "Enter y or n:\n ";
+				input = getLowered(
+					InputHandler::getStrippedInput("Enter y or n:"));
 			}
 		}
 
