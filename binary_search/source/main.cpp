@@ -8,6 +8,7 @@
 #include <get_stripped_input.h>
 #include <get_lowered.h>
 
+#include <input_handler.h>
 
 #include "manager.h"
 
