@@ -9,7 +9,7 @@ class Manager
 {
 public:
 	// Constructors.
-	Manager();
+	Manager(unsigned int pointsNeeded);
 
 	// Runs a single game.
 	void run();

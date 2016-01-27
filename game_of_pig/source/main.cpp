@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 	InputHandler::setDefaultEnding("\n ");
 
 	// Object that takes control to run a game on command.
-	Manager manager;
+	Manager manager(100);
 
 	// Play games until the player requests to quit.
 	while (true) {
@@ -25,13 +25,12 @@ int main(int argc, char* argv[])
 		// returns once a player reaches the winning score.
 		manager.run();
 
+		// Quits if the player requests to.
 		std::string input =
-		//	getLowered(getStrippedInput("Play again? (y/n)", "\n "));
-			getLowered(InputHandler::getStrippedInput("Play again? (y/n)"));
+			getLowered(InputHandler::askStripped("Play again? (y/n)"));
 		if (input == "n")
 			break;
 	}
-
 
 	return 0;
 }

@@ -6,6 +6,41 @@
 std::string InputHandler::defaultQuestion_ = "";
 std::string InputHandler::defaultEnding_ = "";
 
+// printQuestion
+void InputHandler::printQuestion()
+{
+	std::cout << defaultQuestion_ << defaultEnding_;
+}
+
+void InputHandler::printQuestion(
+	const std::string& question,
+	bool useDefaultEnding)
+{
+	std::cout << question;
+
+	if (useDefaultEnding)
+		std::cout << defaultEnding_;
+}
+
+void InputHandler::printQuestion(
+	const std::string& question,
+	const std::string& ending,
+	bool useDefaultEnding)
+{
+	std::cout << question;
+
+	if (useDefaultEnding) {
+		std::cout << defaultEnding_;
+	}
+	else {
+		std::cout << ending;
+	}
+}
+
+
+
+// ...Raw...
+// getRawInput
 std::string InputHandler::getRawInput()
 {
 	// Get the raw input.
@@ -16,32 +51,44 @@ std::string InputHandler::getRawInput()
 	return inputString;
 }
 
-std::string InputHandler::getRawInput(
-	const std::string& question,
-	const std::string& ending,
-	bool useDefaultEnding)
-{
-	askQuestion(question, ending, useDefaultEnding);
-	return getRawInput();
-}
-
-std::string InputHandler::getRawInput(
-	const std::string& question,
-	bool useDefaultEnding)
-{
-	askQuestion(question, "", useDefaultEnding);
-	return getRawInput();
-}
-
-
-
-std::string InputHandler::getStrippedInput()
+void InputHandler::getRawInput(std::string& inputString)
 {
 	// Get the raw input.
-	std::string inputString = getRawInput();
+	std::getline(std::cin, inputString);
+}
 
-	// Becomes true once the first non-white-space character has been found.
-	bool foundBody = false;
+// askRaw
+std::string InputHandler::askRaw()
+{
+	printQuestion();
+	return getRawInput();
+}
+
+std::string InputHandler::askRaw(
+	const std::string& question,
+	bool useDefaultEnding)
+{
+	printQuestion(question, useDefaultEnding);
+	return getRawInput();
+}
+
+std::string InputHandler::askRaw(
+	const std::string& question,
+	const std::string& ending)
+{
+	printQuestion(question, ending);
+	return getRawInput();
+}
+
+
+
+// askStripped
+std::string InputHandler::getStrippedInput()
+{
+	std::string inputString;
+	getRawInput(inputString);
+
+	bool foundBody;
 
 	// Once the body has been found,
 	// white space is first added to this string,
@@ -77,25 +124,32 @@ std::string InputHandler::getStrippedInput()
 	return strippedString;
 }
 
-std::string InputHandler::getStrippedInput(
-	const std::string& question,
-	bool useDefaultEnding)
+std::string InputHandler::askStripped()
 {
-	askQuestion(question, "", useDefaultEnding);
+	printQuestion();
 	return getStrippedInput();
 }
 
-std::string InputHandler::getStrippedInput(
+std::string InputHandler::askStripped(
 	const std::string& question,
-	const std::string& ending,
 	bool useDefaultEnding)
 {
-	askQuestion(question, ending, useDefaultEnding);
+	printQuestion(question, useDefaultEnding);
+	return getStrippedInput();
+}
+
+std::string InputHandler::askStripped(
+	const std::string& question,
+	const std::string& ending)
+{
+	printQuestion(question, ending);
 	return getStrippedInput();
 }
 
 
 
+// set...
+// setDefault...
 void InputHandler::setDefaultQuestion(const std::string& defaultQuestion)
 {
 	defaultQuestion_ = defaultQuestion;
@@ -109,20 +163,7 @@ void InputHandler::setDefaultEnding(const std::string& defaultEnding)
 
 
 
-void InputHandler::askQuestion(
-	const std::string& question,
-	const std::string& ending,
-	bool useDefaultEnding)
-{
-	std::cout << question;
 
-	if (useDefaultEnding) {
-		std::cout << defaultEnding_;
-	}
-	else {
-		std::cout << ending;
-	}
-}
 
 
 

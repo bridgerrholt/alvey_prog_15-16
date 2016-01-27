@@ -14,7 +14,7 @@ extern const ColorCodes constants::G_COLOR_CODES;
 
 using namespace constants;
 
-Manager::Manager() : pointsNeeded_(100)
+Manager::Manager(unsigned int pointsNeeded) : pointsNeeded_(pointsNeeded)
 {
 
 }
@@ -36,7 +36,7 @@ void Manager::run()
 		// Run the a turn for all the players.
 		for (std::size_t i = 0; i < points_.size(); ++i) {
 			//getStrippedInput(
-			InputHandler::getStrippedInput(
+			InputHandler::askStripped(
 				"Player " + G_COLOR_CODES.doB(i+1) + ", press return.", false);
 			// If they won this turn, set them as the winner
 			// and exit the game.
@@ -89,10 +89,10 @@ bool Manager::runTurn(std::size_t index)
 				G_COLOR_CODES.doB(pointsMade) <<
 				" points this round, roll again? (y/n)\n ";*/
 			std::string input = getLowered(
-				InputHandler::getStrippedInput(
+				InputHandler::askStripped(
 				"You have now made " +
 				G_COLOR_CODES.doB(pointsMade) +
-				" points this round, roll again? (y/n)"));
+				" points this round, roll again? (y/n)", std::string(" ")));
 
 			while (true) {
 				if (input == "y") {
@@ -103,7 +103,7 @@ bool Manager::runTurn(std::size_t index)
 					break;
 				}
 				input = getLowered(
-					InputHandler::getStrippedInput("Enter y or n:"));
+					InputHandler::askStripped("Enter y or n:"));
 			}
 		}
 
@@ -116,7 +116,7 @@ bool Manager::runTurn(std::size_t index)
 	}
 
 
-	if (lostPoints) {
+	/*if (lostPoints) {
 		std::cout << "You would have made ";
 	}
 	else {
@@ -125,6 +125,9 @@ bool Manager::runTurn(std::size_t index)
 
 	std::cout << G_COLOR_CODES.doB(pointsMade) <<
 		" points this round, your total is " <<
+		G_COLOR_CODES.doB(points_[index]) << "!\n\n";*/
+
+	std::cout << "Your total is " <<
 		G_COLOR_CODES.doB(points_[index]) << "!\n\n";
 
 
