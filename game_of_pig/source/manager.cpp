@@ -23,13 +23,18 @@ Manager::Manager(unsigned int pointsNeeded) : pointsNeeded_(pointsNeeded)
 
 void Manager::run()
 {
+	// May be customizable.
 	std::size_t playerCount = 2;
 
+	// Players are only represented by their points.
 	for (std::size_t i = 0; i < playerCount; ++i) {
 		points_.push_back(0);
 	}
 
+	// Set to false when the game is complete.
 	bool playing = true;
+
+	// Sets to the index in points_ of the winner.
 	std::size_t winnerIndex;
 
 	while (playing) {

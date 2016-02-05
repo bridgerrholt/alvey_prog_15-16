@@ -69,9 +69,15 @@ std::string ColorCodes::doU(const std::string& inString) const
 
 
 
+std::string ColorCodes::format(const std::string& inString) const
+{
+	bool escaped = false;
+	char escapeChar = '\\';
 
-
-
+	for (auto i = inString.begin(); i != inString.end(); ++i) {
+		
+	}
+}
 
 
 

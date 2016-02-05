@@ -21,6 +21,9 @@ public:
 	// Underlines a string.
 	std::string doU(const std::string& inString) const;
 
+	// Parses through HTML-style input.
+	std::string format(const std::string& inString) const;
+
 	// A set of colors for different kinds of codes.
 	class ColorSet
 	{
