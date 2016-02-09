@@ -3,8 +3,12 @@
 #include <iostream>
 #include <ctype.h>
 
-std::string InputHandler::defaultQuestion_ = "";
-std::string InputHandler::defaultEnding_ = "";
+InputHandler::InputHandler()
+{
+
+}
+
+
 
 // printQuestion
 void InputHandler::printQuestion()

@@ -4,12 +4,13 @@
 #define MANAGER_H
 
 #include <vector>
+#include <input_handler.h>
 
 class Manager
 {
 public:
 	// Constructors.
-	Manager(unsigned int pointsNeeded);
+	Manager(InputHandler& inputHandler, unsigned int pointsNeeded);
 
 	// Runs a single game.
 	void run();
@@ -24,11 +25,14 @@ private:
 	// Return a value in the range [1, 6].
 	unsigned int rollDie(unsigned int sides = 6);
 
-	// One index for each player.
-	std::vector<unsigned int> points_;
+	// The input handler is made before the manager's construction.
+	InputHandler& inputHandler_;
 
 	// The number of points a player needs to win.
 	unsigned int pointsNeeded_;
+	
+	// One index for each player.
+	std::vector<unsigned int> points_;
 
 };
 

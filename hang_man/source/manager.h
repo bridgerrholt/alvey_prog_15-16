@@ -7,11 +7,13 @@
 #include <deque>
 #include <vector>
 
+#include <input_handler.h>
+
 class Manager
 {
 public:
 	// Constructors.
-	Manager(const std::string& fileName);
+	Manager(InputHandler& inputHandler, const std::string& fileName);
 
 	// Runs a single game.
 	void run();
@@ -41,6 +43,7 @@ private:
 	// Sets fail_ to false;
 	void resetFail();
 
+	InputHandler& inputHandler_;
 
 	std::string fileName_;
 

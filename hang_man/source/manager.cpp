@@ -8,8 +8,6 @@
 #include <sstream>
 #include <fstream>
 
-#include <input_handler.h>
-
 #include <constants.h>
 #include <rand_range.h>
 #include <get_stripped_input.h>
@@ -37,8 +35,8 @@ std::string Manager::Letter::getChar()
 
 
 
-Manager::Manager(const std::string& fileName) :
-	fileName_(fileName), fail_(false)
+Manager::Manager(InputHandler& inputHandler, const std::string& fileName) :
+	inputHandler_(inputHandler), fileName_(fileName), fail_(false)
 {
 	loadDictionary();
 	selectWord();
@@ -53,7 +51,7 @@ void Manager::run()
 
 	std::cout << "\n";
 	std::string input =
-		getLowered(InputHandler::askStripped("Guess:"));
+		getLowered(inputHandler_.askStripped("Guess:"));
 
 	while (true) {
 		resetFail();
@@ -66,7 +64,7 @@ void Manager::run()
 		}
 
 		if (fail_)
-			input = getLowered(InputHandler::askStripped(""));
+			input = getLowered(inputHandler_.askStripped(""));
 		else
 			break;
 	}

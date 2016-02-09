@@ -13,11 +13,14 @@ int main(int argc, char* argv[])
 	// Seeds the RNG with the current timestamp.
 	std::srand(time(0));
 
+	// The main input handler, passed to the manager constructor.
+	InputHandler inputHandler;
+
 	// Makes questions end in a newline and space.
-	InputHandler::setDefaultEnding("\n ");
+	inputHandler.setDefaultEnding("\n ");
 
 	// Object that takes control to run a game on command.
-	Manager manager("dictionaries/dictionary.txt");
+	Manager manager(inputHandler, "dictionaries/dictionary.txt");
 
 	// Play games until the player requests to quit.
 	while (true) {
@@ -27,7 +30,7 @@ int main(int argc, char* argv[])
 
 		// Quits if the player requests to.
 		std::string input =
-			getLowered(InputHandler::askStripped("Play again? (y/n)"));
+			getLowered(inputHandler.askStripped("Play again? (y/n)"));
 		if (input == "n")
 			break;
 	}

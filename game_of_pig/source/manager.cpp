@@ -3,8 +3,6 @@
 #include <iostream>
 #include <string>
 
-#include <input_handler.h>
-
 #include <constants.h>
 #include <rand_range.h>
 #include <get_stripped_input.h>
@@ -14,7 +12,8 @@ extern const ColorCodes constants::G_COLOR_CODES;
 
 using namespace constants;
 
-Manager::Manager(unsigned int pointsNeeded) : pointsNeeded_(pointsNeeded)
+Manager::Manager(InputHandler& inputHandler, unsigned int pointsNeeded) :
+	pointsNeeded_(pointsNeeded), inputHandler_(inputHandler)
 {
 
 }
@@ -41,7 +40,7 @@ void Manager::run()
 		// Run the a turn for all the players.
 		for (std::size_t i = 0; i < points_.size(); ++i) {
 			//getStrippedInput(
-			InputHandler::askStripped(
+			inputHandler_.askStripped(
 				"Player " + G_COLOR_CODES.doB(i+1) + ", press return.", false);
 			// If they won this turn, set them as the winner
 			// and exit the game.
@@ -94,7 +93,7 @@ bool Manager::runTurn(std::size_t index)
 				G_COLOR_CODES.doB(pointsMade) <<
 				" points this round, roll again? (y/n)\n ";*/
 			std::string input = getLowered(
-				InputHandler::askStripped(
+				inputHandler_.askStripped(
 				"You have now made " +
 				G_COLOR_CODES.doB(pointsMade) +
 				" points this round, roll again? (y/n)", std::string(" ")));
@@ -108,7 +107,7 @@ bool Manager::runTurn(std::size_t index)
 					break;
 				}
 				input = getLowered(
-					InputHandler::askStripped("Enter y or n:"));
+					inputHandler_.askStripped("Enter y or n:"));
 			}
 		}
 
