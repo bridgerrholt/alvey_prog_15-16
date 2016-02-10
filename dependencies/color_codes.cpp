@@ -2,13 +2,11 @@
 
 #include <string>
 
-ColorCodes::ColorCodes()
-{
-	reset     = "\e[0m";
-	bold      = "\e[1m";
-	underline = "\e[4m";
+std::string ColorCodes::reset     = "\e[0m";
+std::string ColorCodes::bold      = "\e[1m";
+std::string ColorCodes::underline = "\e[4m";
 
-	regularSet = {
+ColorCodes::ColorSet ColorCodes::regularSet = {
 		"\e[0;30m",
 		"\e[0;31m",
 		"\e[0;32m",
@@ -19,7 +17,7 @@ ColorCodes::ColorCodes()
 		"\e[0;37m"
 	};
 
-	boldSet = {
+ColorCodes::ColorSet ColorCodes::boldSet = {
 		"\e[1;30m",
 		"\e[1;31m",
 		"\e[1;32m",
@@ -30,7 +28,7 @@ ColorCodes::ColorCodes()
 		"\e[1;37m"
 	};
 
-	underlineSet = {
+ColorCodes::ColorSet ColorCodes::underlineSet = {
 		"\e[4;30m",
 		"\e[4;31m",
 		"\e[4;32m",
@@ -41,7 +39,7 @@ ColorCodes::ColorCodes()
 		"\e[4;37m"
 	};
 
-	backgroundSet = {
+ColorCodes::ColorSet ColorCodes::backgroundSet = {
 		"\e[40m",
 		"\e[41m",
 		"\e[42m",
@@ -51,7 +49,6 @@ ColorCodes::ColorCodes()
 		"\e[46m",
 		"\e[47m"
 	};
-}
 
 
 
@@ -62,14 +59,14 @@ ColorCodes::ColorCodes()
 
 
 
-std::string ColorCodes::doU(const std::string& inString) const
+std::string ColorCodes::doU(const std::string& inString)
 {
 	return underline + inString + reset;
 }
 
 
 
-std::string ColorCodes::format(const std::string& inString) const
+std::string ColorCodes::format(const std::string& inString)
 {
 	bool escaped = false;
 	char escapeChar = '\\';

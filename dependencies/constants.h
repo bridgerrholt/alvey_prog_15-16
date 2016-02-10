@@ -8,7 +8,7 @@
 
 namespace constants
 {
-	const ColorCodes G_COLOR_CODES;
+	//const ColorCodes G_COLOR_CODES;
 
 // Windows (32-bit and 64-bit).
 #ifdef _WIN32

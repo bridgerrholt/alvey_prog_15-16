@@ -8,17 +8,14 @@
 #include <sstream>
 #include <fstream>
 
+#include <exception>
+
 #include <patch/stoi.h>
 
 #include <constants.h>
 #include <rand_range.h>
 #include <get_stripped_input.h>
 #include <get_lowered.h>
-
-
-extern const ColorCodes constants::G_COLOR_CODES;
-
-using namespace constants;
 
 Manager::Letter::Letter(char contentSet) :
 	content(contentSet),
@@ -52,8 +49,6 @@ Manager::Manager(
 {
 	loadDictionary();
 	loadImages();
-
-	selectWord();
 }
 
 
@@ -61,6 +56,10 @@ Manager::Manager(
 void Manager::run()
 {
 	livesLeft_ = lives_;
+	guesses_ = std::vector<char>();
+
+	selectWord();
+
 
 	bool playerWon;
 	while (!checkOver(playerWon)) {
@@ -74,12 +73,12 @@ void Manager::run()
 	if (playerWon) {
 		std::cout << "You win!\n";
 		std::cout << "You guessed " <<
-			G_COLOR_CODES.doB(currentWord_) << "!\n";
+			ColorCodes::doB(currentWord_) << "!\n";
 	}
 	else {
 		std::cout << "You lose!\n";
 		std::cout << "The correct answer is " <<
-			G_COLOR_CODES.doB(currentWord_) << "!\n";
+			ColorCodes::doB(currentWord_) << "!\n";
 	}
 
 	std::cout << std::endl;
@@ -132,8 +131,10 @@ void Manager::runGuess()
 			}
 		}
 
-		if (fail_)
+		if (fail_) {
 			input = getLowered(inputHandler_.askStripped(""));
+			inputChar = input[0];
+		}
 		else
 			break;
 	}
@@ -143,7 +144,6 @@ void Manager::runGuess()
 		if (inputChar == i->content) {
 			guessedRight = true;
 			i->guessed = true;
-			break;
 		}
 	}
 
@@ -151,6 +151,8 @@ void Manager::runGuess()
 		--livesLeft_;
 		guesses_.push_back(inputChar);
 	}
+
+	std::cout << '\n';
 
 }
 
@@ -209,12 +211,16 @@ void Manager::displayRevealedLetters()
 {
 	auto lastLetter = letters_.end()-1;
 	for (auto i = letters_.begin(); i != letters_.end(); ++i) {
-		if (!i->guessed) {
-			std::cout << G_COLOR_CODES.bold;
+		if (i->guessed) {
+			std::cout << i->content;
+		}
+		else {
+			std::cout << ColorCodes::bold << i->content <<
+				ColorCodes::reset;
 		}
 
 		if (i != lastLetter)
-			std::cout << i->content << " ";
+			std::cout << " ";
 	}
 
 	std::cout << '\n';
@@ -256,9 +262,11 @@ void Manager::selectWord()
 		loadDictionary();
 	}
 
-	std::size_t index = randRange(0, dictionary_.size());
+	std::size_t index = randRange(dictionary_.size());
 	currentWord_ = dictionary_[index];
 	dictionary_.erase(dictionary_.begin()+index);
+
+	letters_ = std::vector<Letter>();
 
 	for (auto i = currentWord_.begin(); i != currentWord_.end(); ++i) {
 		letters_.push_back(Letter(*i));
@@ -275,7 +283,13 @@ void Manager::loadImages()
 
 	std::getline(fileStream, line);
 
-	std::size_t imageHeight = patch::stoi(line);
+	std::size_t imageHeight;
+	try {
+		imageHeight = patch::stoi(line);
+	}
+	catch (std::exception& e) {
+		std::cout << e.what() << '\n';
+	}
 
 	do {
 		image = "";

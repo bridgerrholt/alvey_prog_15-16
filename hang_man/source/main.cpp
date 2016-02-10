@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <iostream>
 #include <time.h>
 
 #include <get_stripped_input.h>
@@ -17,15 +18,17 @@ int main(int argc, char* argv[])
 	InputHandler inputHandler;
 
 	// Makes questions end in a newline and space.
-	inputHandler.setDefaultEnding("\n ");
+	inputHandler.setDefaultEnding(" ");
 
 	// Object that takes control to run a game on command.
-	Manager manager(inputHandler, "dictionaries/dictionary.txt", "text_images/man");
+	Manager manager(inputHandler,
+		"dictionaries/dictionary.txt",
+		"text_images/man");
 
 	// Play games until the player requests to quit.
 	while (true) {
 		// Runs a single game,
-		// returns once a player reaches the winning score.
+		// returns once either the player wins or the computer wins.
 		manager.run();
 
 		// Quits if the player requests to.
@@ -33,6 +36,7 @@ int main(int argc, char* argv[])
 			getLowered(inputHandler.askStripped("Play again? (y/n)"));
 		if (input == "n")
 			break;
+		std::cout << '\n';
 	}
 
 	return 0;

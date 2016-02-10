@@ -13,10 +13,6 @@
 
 #include "manager.h"
 
-extern const ColorCodes constants::G_COLOR_CODES;
-
-using namespace constants;
-
 Manager::Manager() : guessCount_(0), fail_(false)
 {
 
@@ -112,10 +108,10 @@ void Manager::run() {
 	if (guessCount_ > 1)
 		guessString += "es";
 
-	//std::cout << G_COLOR_CODES.doB("ABC\n");
+	//std::cout << ColorCodes::doB("ABC\n");
 
 	std::cout << "\nYour number is " <<
-		G_COLOR_CODES.doB(patch::to_string(answer)) << "! (took " <<
+		ColorCodes::doB(patch::to_string(answer)) << "! (took " <<
 		guessCount_ << " " << guessString << ")\n";
 }
 
@@ -133,7 +129,7 @@ void Manager::makeGuess()
 	// ask if it's greater than or less than their number.
 	if (guessCount_ == 1) {
 		std::cout << "Is " <<
-			G_COLOR_CODES.doB(patch::to_string(guess)) <<
+			ColorCodes::doB(patch::to_string(guess)) <<
 			" greater than, less than, or equal to your number? (> < =):\n";
 	}
 
@@ -143,7 +139,7 @@ void Manager::makeGuess()
 		resetFail();
 
 		// Get the input.
-		std::cout << G_COLOR_CODES.doB(patch::to_string(guess)) << " is ";
+		std::cout << ColorCodes::doB(patch::to_string(guess)) << " is ";
 		std::string strippedInput = getStrippedInput();
 
 		// Their number is greater than the guessed number.

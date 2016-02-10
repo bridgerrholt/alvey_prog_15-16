@@ -12,17 +12,15 @@
 class ColorCodes
 {
 public:
-	ColorCodes();
-
 	// Bolds a string.
 	template<class T>
-	std::string doB(const T& input) const;
+	static std::string doB(const T& input);
 	//std::string doB(const std::string& inString) const;
 	// Underlines a string.
-	std::string doU(const std::string& inString) const;
+	static std::string doU(const std::string& inString);
 
 	// Parses through HTML-style input.
-	std::string format(const std::string& inString) const;
+	static std::string format(const std::string& inString);
 
 	// A set of colors for different kinds of codes.
 	class ColorSet
@@ -38,20 +36,24 @@ public:
 		std::string white;
 	};
 
-	std::string reset;
-	std::string bold;
-	std::string underline;
+	static std::string reset;
+	static std::string bold;
+	static std::string underline;
 
-	ColorSet regularSet;
-	ColorSet boldSet;
-	ColorSet underlineSet;
-	ColorSet backgroundSet;
+	static ColorSet regularSet;
+	static ColorSet boldSet;
+	static ColorSet underlineSet;
+	static ColorSet backgroundSet;
+
+private:
+	// The class is meant to be purely static.
+	ColorCodes();
 };
 
 
 
 template<class T>
-std::string ColorCodes::doB(const T& input) const
+std::string ColorCodes::doB(const T& input)
 {
 	return bold + patch::to_string(input) + reset;
 }

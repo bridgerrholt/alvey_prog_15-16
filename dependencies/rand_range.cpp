@@ -1,18 +1,23 @@
-#include <cstdlib>
-#include <iostream>
+#include "rand_double.h"
+#include "rand_range.h"
 
 int randRange(int min, int max)
 {
-	return min + static_cast <int>(std::rand())/(static_cast <float>(RAND_MAX/(max-min))); 
+
+	return min + randRange(max-min);
+
+	/*return min + static_cast<int>(std::rand())/(static_cast<float>(RAND_MAX/(max-min))); 
 
 	float returnVal = min + ((max * std::rand()) / (RAND_MAX + 1.0));
 	std::cout << returnVal << '\n';
-	return returnVal;
+	return returnVal;*/
 }
 
 
 
 unsigned int randRange(unsigned int max)
 {
-	return static_cast <int>(std::rand())/(static_cast <float>(RAND_MAX/max));
+	//std::cout << RAND_MAX << '\n';
+	//return static_cast<int>(std::rand())/(static_cast<float>(RAND_MAX/max));
+	return randDouble()*max;
 }

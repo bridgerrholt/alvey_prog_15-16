@@ -8,10 +8,6 @@
 #include <get_stripped_input.h>
 #include <get_lowered.h>
 
-extern const ColorCodes constants::G_COLOR_CODES;
-
-using namespace constants;
-
 Manager::Manager(InputHandler& inputHandler, unsigned int pointsNeeded) :
 	pointsNeeded_(pointsNeeded), inputHandler_(inputHandler)
 {
@@ -41,7 +37,7 @@ void Manager::run()
 		for (std::size_t i = 0; i < points_.size(); ++i) {
 			//getStrippedInput(
 			inputHandler_.askStripped(
-				"Player " + G_COLOR_CODES.doB(i+1) + ", press return.", false);
+				"Player " + ColorCodes::doB(i+1) + ", press return.", false);
 			// If they won this turn, set them as the winner
 			// and exit the game.
 			if (runTurn(i)) {
@@ -52,7 +48,7 @@ void Manager::run()
 		}
 	}
 
-	std::cout << G_COLOR_CODES.doB("Player " +
+	std::cout << ColorCodes::doB("Player " +
 		patch::to_string(winnerIndex+1) + " wins!") <<
 			"\n" << std::endl;
 
@@ -68,7 +64,7 @@ bool Manager::runTurn(std::size_t index)
 
 	while (playing) {
 		unsigned int side = rollDie();
-		std::cout << "You rolled a " << G_COLOR_CODES.doB(side) << "!\n";
+		std::cout << "You rolled a " << ColorCodes::doB(side) << "!\n";
 
 		if (side == 1) {
 			lostPoints = true;
@@ -82,20 +78,20 @@ bool Manager::runTurn(std::size_t index)
 
 			if (pointsTotal >= pointsNeeded_) {
 				std::cout << "You made " <<
-					G_COLOR_CODES.doB(pointsMade) <<
+					ColorCodes::doB(pointsMade) <<
 					" points this round, " <<
-					G_COLOR_CODES.doB("you win!") << "\n\n";
+					ColorCodes::doB("you win!") << "\n\n";
 				playing = false;
 				break;
 			}
 
 			/*std::cout << "You have now made " <<
-				G_COLOR_CODES.doB(pointsMade) <<
+				ColorCodes::doB(pointsMade) <<
 				" points this round, roll again? (y/n)\n ";*/
 			std::string input = getLowered(
 				inputHandler_.askStripped(
 				"You have now made " +
-				G_COLOR_CODES.doB(pointsMade) +
+				ColorCodes::doB(pointsMade) +
 				" points this round, roll again? (y/n)", std::string(" ")));
 
 			while (true) {
@@ -127,12 +123,12 @@ bool Manager::runTurn(std::size_t index)
 		std::cout << "You made ";
 	}
 
-	std::cout << G_COLOR_CODES.doB(pointsMade) <<
+	std::cout << ColorCodes::doB(pointsMade) <<
 		" points this round, your total is " <<
-		G_COLOR_CODES.doB(points_[index]) << "!\n\n";*/
+		ColorCodes::doB(points_[index]) << "!\n\n";*/
 
 	std::cout << "Your total is " <<
-		G_COLOR_CODES.doB(points_[index]) << "!\n\n";
+		ColorCodes::doB(points_[index]) << "!\n\n";
 
 
 	return false;
