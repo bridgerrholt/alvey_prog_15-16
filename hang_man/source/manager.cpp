@@ -8,17 +8,21 @@
 #include <sstream>
 #include <fstream>
 
+#include <patch/stoi.h>
+
 #include <constants.h>
 #include <rand_range.h>
 #include <get_stripped_input.h>
 #include <get_lowered.h>
+
 
 extern const ColorCodes constants::G_COLOR_CODES;
 
 using namespace constants;
 
 Manager::Letter::Letter(char contentSet) :
-	guessed(false), content(contentSet)
+	content(contentSet),
+	guessed(false)
 {
 
 }
@@ -35,10 +39,20 @@ std::string Manager::Letter::getChar()
 
 
 
-Manager::Manager(InputHandler& inputHandler, const std::string& fileName) :
-	inputHandler_(inputHandler), fileName_(fileName), fail_(false)
+Manager::Manager(
+	InputHandler& inputHandler,
+	const std::string& dictionaryFileName,
+	const std::string& imagesFileName) :
+		inputHandler_(inputHandler),
+		dictionaryFileName_(dictionaryFileName),
+		imagesFileName_(imagesFileName),
+
+		lives_(6),
+		fail_(false)
 {
 	loadDictionary();
+	loadImages();
+
 	selectWord();
 }
 
@@ -46,12 +60,44 @@ Manager::Manager(InputHandler& inputHandler, const std::string& fileName) :
 
 void Manager::run()
 {
+	livesLeft_ = lives_;
+
+	bool playerWon;
+	while (!checkOver(playerWon)) {
+		runGuess();
+	}
+
+	displayImage();
+	displayRevealedLetters();
+	displayGuesses();
+
+	if (playerWon) {
+		std::cout << "You win!\n";
+		std::cout << "You guessed " <<
+			G_COLOR_CODES.doB(currentWord_) << "!\n";
+	}
+	else {
+		std::cout << "You lose!\n";
+		std::cout << "The correct answer is " <<
+			G_COLOR_CODES.doB(currentWord_) << "!\n";
+	}
+
+	std::cout << std::endl;
+
+}
+
+
+
+void Manager::runGuess()
+{
+	displayImage();
 	displayLetters();
 	displayGuesses();
 
 	std::cout << "\n";
 	std::string input =
 		getLowered(inputHandler_.askStripped("Guess:"));
+	char inputChar = input[0];
 
 	while (true) {
 		resetFail();
@@ -59,8 +105,31 @@ void Manager::run()
 		if (input.size() != 1) {
 			makeError("Must be 1 letter.");
 		}
-		else if (!isalpha(input[0])) {
+		else if (!isalpha(inputChar)) {
 			makeError("Must be a letter.");
+		}
+		else {
+			// Error if it was already guessed.
+			bool alreadyGuessed = false;
+
+			for (auto i = guesses_.begin(); i != guesses_.end(); ++i) {
+				if (inputChar == *i) {
+					alreadyGuessed = true;
+					break;
+				}
+			}
+
+			for (auto i = letters_.begin();
+				i != letters_.end() && !alreadyGuessed; ++i) {
+				if (inputChar == i->content && i->guessed) {
+					alreadyGuessed = true;
+					break;
+				}
+			}
+
+			if (alreadyGuessed) {
+				makeError("Already guessed.");
+			}
 		}
 
 		if (fail_)
@@ -69,6 +138,57 @@ void Manager::run()
 			break;
 	}
 
+	bool guessedRight = false;
+	for (auto i = letters_.begin(); i != letters_.end(); ++i) {
+		if (inputChar == i->content) {
+			guessedRight = true;
+			i->guessed = true;
+			break;
+		}
+	}
+
+	if (!guessedRight) {
+		--livesLeft_;
+		guesses_.push_back(inputChar);
+	}
+
+}
+
+
+
+bool Manager::checkOver(bool& playerWon)
+{
+	// If they have guessed away all their lives, the computer wins.
+	if (livesLeft_ == 0) {
+		playerWon = false;
+		return true;
+	}
+
+	// If they have guessed all the letters, they win.
+	// Check if any letter is not guessed.
+	bool allGuessed = true;
+	for (auto i = letters_.begin(); i != letters_.end(); ++i) {
+		// If it is not guessed, they'll keep playing.
+		if (!i->guessed) {
+			allGuessed = false;
+			break;
+		}
+	}
+
+	if (allGuessed) {
+		playerWon = true;
+		return true;
+	}
+	
+	return false;
+}
+
+
+
+void Manager::displayImage()
+{
+	std::cout << images_.at(guesses_.size());
+	std::cout << '\n';
 }
 
 
@@ -81,6 +201,23 @@ void Manager::displayLetters()
 	}
 
 	std::cout << lastLetter->getChar() << "\n";
+}
+
+
+
+void Manager::displayRevealedLetters()
+{
+	auto lastLetter = letters_.end()-1;
+	for (auto i = letters_.begin(); i != letters_.end(); ++i) {
+		if (!i->guessed) {
+			std::cout << G_COLOR_CODES.bold;
+		}
+
+		if (i != lastLetter)
+			std::cout << i->content << " ";
+	}
+
+	std::cout << '\n';
 }
 
 
@@ -103,7 +240,7 @@ void Manager::displayGuesses()
 
 void Manager::loadDictionary()
 {
-	std::ifstream fileStream(fileName_);
+	std::ifstream fileStream(dictionaryFileName_);
 	std::string word;
 
 	while (std::getline(fileStream, word)) {
@@ -126,6 +263,34 @@ void Manager::selectWord()
 	for (auto i = currentWord_.begin(); i != currentWord_.end(); ++i) {
 		letters_.push_back(Letter(*i));
 	}
+}
+
+
+
+void Manager::loadImages()
+{
+	std::ifstream fileStream(imagesFileName_);
+	std::string line;
+	std::string image;
+
+	std::getline(fileStream, line);
+
+	std::size_t imageHeight = patch::stoi(line);
+
+	do {
+		image = "";
+		for (std::size_t i = 0; i < imageHeight; ++i) {
+			std::getline(fileStream, line);
+			image += line;
+
+			if (i != imageHeight-1) {
+				image += "\n";
+			}
+		}
+
+		images_.push_back(image);
+
+	} while (std::getline(fileStream, line));
 }
 
 

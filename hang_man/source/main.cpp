@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
 	inputHandler.setDefaultEnding("\n ");
 
 	// Object that takes control to run a game on command.
-	Manager manager(inputHandler, "dictionaries/dictionary.txt");
+	Manager manager(inputHandler, "dictionaries/dictionary.txt", "text_images/man");
 
 	// Play games until the player requests to quit.
 	while (true) {
