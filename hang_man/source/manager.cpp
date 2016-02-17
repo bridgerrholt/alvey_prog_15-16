@@ -93,11 +93,13 @@ void Manager::runGuess()
 	displayLetters();
 	displayGuesses();
 
+	// Ask for the guess.
 	std::cout << "\n";
 	std::string input =
 		getLowered(inputHandler_.askStripped("Guess:"));
 	char inputChar = input[0];
 
+	// Keep asking until they provide a single letter.
 	while (true) {
 		resetFail();
 
@@ -111,6 +113,7 @@ void Manager::runGuess()
 			// Error if it was already guessed.
 			bool alreadyGuessed = false;
 
+			// Search in the incorrect guesses.
 			for (auto i = guesses_.begin(); i != guesses_.end(); ++i) {
 				if (inputChar == *i) {
 					alreadyGuessed = true;
@@ -118,6 +121,7 @@ void Manager::runGuess()
 				}
 			}
 
+			// Search in the correct guesses.
 			for (auto i = letters_.begin();
 				i != letters_.end() && !alreadyGuessed; ++i) {
 				if (inputChar == i->content && i->guessed) {
@@ -139,6 +143,7 @@ void Manager::runGuess()
 			break;
 	}
 
+	// Look through the letters to find the guessed letter.
 	bool guessedRight = false;
 	for (auto i = letters_.begin(); i != letters_.end(); ++i) {
 		if (inputChar == i->content) {
@@ -147,6 +152,7 @@ void Manager::runGuess()
 		}
 	}
 
+	// If not found, the guess was incorrect.
 	if (!guessedRight) {
 		--livesLeft_;
 		guesses_.push_back(inputChar);
@@ -197,23 +203,33 @@ void Manager::displayImage()
 
 void Manager::displayLetters()
 {
+	// Print every Letter instance for the current word,
+	// with a space in between each.
 	auto lastLetter = letters_.end()-1;
-	for (auto i = letters_.begin(); i != lastLetter; ++i) {
+	for (auto i = letters_.begin(); i != letters_.end(); ++i) {
 		std::cout << i->getChar() << " ";
+
+		if (i != lastLetter)
+			std::cout << " ";
 	}
 
-	std::cout << lastLetter->getChar() << "\n";
+	std::cout << '\n';
 }
 
 
 
 void Manager::displayRevealedLetters()
 {
+	// Print every Letter instance for the current word,
+	// with a space in between each and bolding the ones not guessed.
 	auto lastLetter = letters_.end()-1;
 	for (auto i = letters_.begin(); i != letters_.end(); ++i) {
+		// If guessed, display normally.
 		if (i->guessed) {
 			std::cout << i->content;
 		}
+
+		// If not guessed, display bolded.
 		else {
 			std::cout << ColorCodes::bold << i->content <<
 				ColorCodes::reset;
@@ -230,6 +246,8 @@ void Manager::displayRevealedLetters()
 
 void Manager::displayGuesses()
 {
+	// Only display something if they have at least 1 incorrect guess.
+	// Displays like: [ r, a, n, d, o, m ]
 	if (guesses_.size() > 0) {
 		std::cout << "[ ";
 
@@ -246,6 +264,7 @@ void Manager::displayGuesses()
 
 void Manager::loadDictionary()
 {
+	// Simply loads the file and saves each line.
 	std::ifstream fileStream(dictionaryFileName_);
 	std::string word;
 
@@ -258,16 +277,22 @@ void Manager::loadDictionary()
 
 void Manager::selectWord()
 {
+	// If all the words have been used, reload the dictionary.
 	if (dictionary_.size() <= 0) {
 		loadDictionary();
 	}
 
+	// Select a random index.
 	std::size_t index = randRange(dictionary_.size());
+	// Set it as the current word.
 	currentWord_ = dictionary_[index];
+	// Remove it from the list.
 	dictionary_.erase(dictionary_.begin()+index);
 
+	// Clear the collection of Letter instances.
 	letters_ = std::vector<Letter>();
 
+	// Add each letter.
 	for (auto i = currentWord_.begin(); i != currentWord_.end(); ++i) {
 		letters_.push_back(Letter(*i));
 	}
@@ -277,12 +302,21 @@ void Manager::selectWord()
 
 void Manager::loadImages()
 {
+	// Load the file.
 	std::ifstream fileStream(imagesFileName_);
+	// Current line.
 	std::string line;
+	// Current image separated by new lines.
+	std::vector<std::string> imageLines;
+	// Current image.
 	std::string image;
+	// Background for the images.
+	std::vector<std::string> gallows;
 
+	// The first line must specify the size of each image.
 	std::getline(fileStream, line);
 
+	// Image height in lines.
 	std::size_t imageHeight;
 	try {
 		imageHeight = patch::stoi(line);
@@ -291,19 +325,59 @@ void Manager::loadImages()
 		std::cout << e.what() << '\n';
 	}
 
+	// First get the gallows.
+	bool gettingGallows = true;
+
+	// Turn all the images into strings and push them.
 	do {
+		// Concat the amount of rows specified as the height.
+		imageLines = std::vector<std::string>();
 		image = "";
 		for (std::size_t i = 0; i < imageHeight; ++i) {
 			std::getline(fileStream, line);
-			image += line;
+			imageLines.push_back(line);
 
-			if (i != imageHeight-1) {
+		}
+
+		if (gettingGallows) {
+			gallows = imageLines;
+			gettingGallows = false;
+		}
+		else {
+			// Replace spaces with the gallows background.
+			for (std::size_t i = 0; i < gallows.size(); ++i) {
+				if (i >= imageLines.size()) {
+					imageLines.push_back("");
+				}
+
+				for (std::size_t j = 0; j < gallows[i].size(); ++j) {
+					if (j >= imageLines[i].size()) {
+						imageLines[i] += gallows[i][j];
+					}
+					else if (imageLines[i][j] == ' ') {
+						imageLines[i][j] = gallows[i][j];
+					}
+
+				}
+			}
+
+
+		}
+
+		for (auto i = imageLines.begin(); i != imageLines.end(); ++i) {
+			image += *i;
+
+			// Have a new line between each row.
+			if (i != imageLines.end()-1) {
 				image += "\n";
 			}
 		}
 
+		// Push the new image.
 		images_.push_back(image);
 
+
+	// Ignore the lines in between images.
 	} while (std::getline(fileStream, line));
 }
 

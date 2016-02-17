@@ -21,6 +21,7 @@ public:
 	void run();
 
 private:
+	// A word is a list of these special character handlers.
 	class Letter
 	{
 	public:
@@ -35,21 +36,30 @@ private:
 	void runGuess();
 	bool checkOver(bool& playerWon);
 
+	// Prints the specific image string based on the lives left.
 	void displayImage();
+	// Prints a letter for a guessed letter,
+	// and an underscore for every other letter.
 	void displayLetters();
+	// Prints a letter for a guessed letter,
+	// and a bold letter for every other letter.
 	void displayRevealedLetters();
+	// Prints the list of guesses, surrounded in brackets.
 	void displayGuesses();
 
-
+	// Makes a list of all the words in the given file.
 	void loadDictionary();
+	// Randomly selects a word from the list, removing it as well.
 	void selectWord();
 
+	// Reads the text file, capturing the several "images".
 	void loadImages();
 
 	// Print an error plus a newline, set fail to true.
 	void makeError(const std::string& errorString);
 	// Sets fail_ to false;
 	void resetFail();
+
 
 	InputHandler& inputHandler_;
 
@@ -82,9 +92,6 @@ private:
 
 	// A fail flag for errors.
 	bool fail_;
-
-
-
 };
 
 #endif

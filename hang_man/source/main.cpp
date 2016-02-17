@@ -20,7 +20,8 @@ int main(int argc, char* argv[])
 	// Makes questions end in a newline and space.
 	inputHandler.setDefaultEnding(" ");
 
-	// Object that takes control to run a game on command.
+	// Object that takes control to run a game on command,
+	// given the list of words and the data for displaying the man.
 	Manager manager(inputHandler,
 		"dictionaries/dictionary.txt",
 		"text_images/man");
