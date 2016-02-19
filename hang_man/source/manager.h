@@ -8,6 +8,7 @@
 #include <vector>
 
 #include <input_handler.h>
+#include <fail_handler.h>
 
 class Manager
 {
@@ -55,13 +56,9 @@ private:
 	// Reads the text file, capturing the several "images".
 	void loadImages();
 
-	// Print an error plus a newline, set fail to true.
-	void makeError(const std::string& errorString);
-	// Sets fail_ to false;
-	void resetFail();
-
 
 	InputHandler& inputHandler_;
+	FailHandler fail_;
 
 	// Path for the file of words.
 	std::string dictionaryFileName_;
@@ -88,10 +85,6 @@ private:
 
 	// Displayed depending on amount of incorrect guesses.
 	std::vector<std::string> images_;
-
-
-	// A fail flag for errors.
-	bool fail_;
 };
 
 #endif

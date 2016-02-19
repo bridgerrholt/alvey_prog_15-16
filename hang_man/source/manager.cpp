@@ -9,6 +9,7 @@
 #include <fstream>
 
 #include <exception>
+#include <stdexcept>
 
 #include <patch/stoi.h>
 
@@ -44,8 +45,7 @@ Manager::Manager(
 		dictionaryFileName_(dictionaryFileName),
 		imagesFileName_(imagesFileName),
 
-		lives_(6),
-		fail_(false)
+		lives_(6)
 {
 	loadDictionary();
 	loadImages();
@@ -60,7 +60,7 @@ void Manager::run()
 
 	selectWord();
 
-
+	// Play until the player wins or loses.
 	bool playerWon;
 	while (!checkOver(playerWon)) {
 		runGuess();
@@ -82,7 +82,6 @@ void Manager::run()
 	}
 
 	std::cout << std::endl;
-
 }
 
 
@@ -101,13 +100,13 @@ void Manager::runGuess()
 
 	// Keep asking until they provide a single letter.
 	while (true) {
-		resetFail();
+		fail_.reset();
 
 		if (input.size() != 1) {
-			makeError("Must be 1 letter.");
+			fail_.error("Must be 1 letter.");
 		}
 		else if (!isalpha(inputChar)) {
-			makeError("Must be a letter.");
+			fail_.error("Must be a letter.");
 		}
 		else {
 			// Error if it was already guessed.
@@ -131,11 +130,11 @@ void Manager::runGuess()
 			}
 
 			if (alreadyGuessed) {
-				makeError("Already guessed.");
+				fail_.error("Already guessed.");
 			}
 		}
 
-		if (fail_) {
+		if (fail_.get()) {
 			input = getLowered(inputHandler_.askStripped(""));
 			inputChar = input[0];
 		}
@@ -306,12 +305,13 @@ void Manager::loadImages()
 	std::ifstream fileStream(imagesFileName_);
 	// Current line.
 	std::string line;
-	// Current image separated by new lines.
+	// Current image represented as rows.
 	std::vector<std::string> imageLines;
-	// Current image.
+	// Current image, ready to be printed.
 	std::string image;
 	// Background for the images.
 	std::vector<std::string> gallows;
+
 
 	// The first line must specify the size of each image.
 	std::getline(fileStream, line);
@@ -325,7 +325,9 @@ void Manager::loadImages()
 		std::cout << e.what() << '\n';
 	}
 
-	// First get the gallows.
+
+	// First get the gallows (the background for every image,
+	// and the starting image).
 	bool gettingGallows = true;
 
 	// Turn all the images into strings and push them.
@@ -333,41 +335,57 @@ void Manager::loadImages()
 		// Concat the amount of rows specified as the height.
 		imageLines = std::vector<std::string>();
 		image = "";
-		for (std::size_t i = 0; i < imageHeight; ++i) {
-			std::getline(fileStream, line);
-			imageLines.push_back(line);
 
+		// Push the amount of rows specified as the image height.
+		for (std::size_t i = 0; i < imageHeight; ++i) {
+			// Fail if there isn't another row.
+			// Note: Bug where this it fails unless there is
+			// an empty row after the last image.
+			if (!std::getline(fileStream, line)) {
+				throw std::runtime_error("Not enough rows in image");
+			}
+
+			imageLines.push_back(line);
 		}
 
+		// If it's the first image, copy it as the background.
 		if (gettingGallows) {
 			gallows = imageLines;
 			gettingGallows = false;
 		}
+
+		// If the background has been made, put it under the image.
 		else {
 			// Replace spaces with the gallows background.
+			// Loop through the background rows.
 			for (std::size_t i = 0; i < gallows.size(); ++i) {
+
+				// If the image is too short, push a row.
 				if (i >= imageLines.size()) {
 					imageLines.push_back("");
 				}
 
+				// Loop through this row of the background and the image.
 				for (std::size_t j = 0; j < gallows[i].size(); ++j) {
+					// If the image is too thin, concat the background.
 					if (j >= imageLines[i].size()) {
 						imageLines[i] += gallows[i][j];
 					}
+
+					// Replace spaces.
 					else if (imageLines[i][j] == ' ') {
 						imageLines[i][j] = gallows[i][j];
 					}
 
 				}
 			}
-
-
 		}
 
+		// Concat the rows, with new lines in between.
 		for (auto i = imageLines.begin(); i != imageLines.end(); ++i) {
 			image += *i;
 
-			// Have a new line between each row.
+			// Have a new line between each row, but not after the last row.
 			if (i != imageLines.end()-1) {
 				image += "\n";
 			}
@@ -380,22 +398,6 @@ void Manager::loadImages()
 	// Ignore the lines in between images.
 	} while (std::getline(fileStream, line));
 }
-
-
-
-void Manager::makeError(const std::string& errorString)
-{
-	std::cout << errorString;
-	fail_ = true;
-}
-
-
-
-void Manager::resetFail()
-{
-	fail_ = false;
-}
-
 
 
 
