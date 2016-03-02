@@ -45,7 +45,9 @@ Manager::Manager(
 		dictionaryFileName_(dictionaryFileName),
 		imagesFileName_(imagesFileName),
 
-		lives_(6)
+		healthMax_(6),
+		livesMax_(3),
+		computerLivesMax_(3)
 {
 	loadDictionary();
 	loadImages();
@@ -55,33 +57,53 @@ Manager::Manager(
 
 void Manager::run()
 {
-	livesLeft_ = lives_;
-	guesses_ = std::vector<char>();
+	lives_ = livesMax_;
+	computerLives_ = computerLivesMax_;
 
-	selectWord();
+	while (lives_ >= 1 && computerLives_ >= 1) {
+		health_ = healthMax_;
+		guesses_ = std::vector<char>();
 
-	// Play until the player wins or loses.
-	bool playerWon;
-	while (!checkOver(playerWon)) {
-		runGuess();
+		displayLives("You", lives_);
+		displayLives("The computer", computerLives_);
+		selectWord();
+
+		// Play until the player wins or loses.
+		bool playerWon;
+		while (!checkOver(playerWon)) {
+			runGuess();
+		}
+
+		displayImage();
+		displayRevealedLetters();
+		displayGuesses();
+
+		if (playerWon) {
+			std::cout << "You win!\n";
+			std::cout << "You guessed " <<
+				ColorCodes::doB(currentWord_) << "!\n";
+			--computerLives_;
+		}
+		else {
+			std::cout << "You lose!\n";
+			std::cout << "The correct answer is " <<
+				ColorCodes::doB(currentWord_) << "!\n";
+			--lives_;
+		}
+
+		std::cout << std::endl;
 	}
 
-	displayImage();
-	displayRevealedLetters();
-	displayGuesses();
-
-	if (playerWon) {
-		std::cout << "You win!\n";
-		std::cout << "You guessed " <<
-			ColorCodes::doB(currentWord_) << "!\n";
+	// If the player lost.
+	if (lives_ == 0) {
+		std::cout << ColorCodes::doB("GAME OVER") << "\n";
 	}
+
+	// If the computer lost.
 	else {
-		std::cout << "You lose!\n";
-		std::cout << "The correct answer is " <<
-			ColorCodes::doB(currentWord_) << "!\n";
+		std::cout << "You beat the computer!\n";
 	}
 
-	std::cout << std::endl;
 }
 
 
@@ -153,7 +175,7 @@ void Manager::runGuess()
 
 	// If not found, the guess was incorrect.
 	if (!guessedRight) {
-		--livesLeft_;
+		--health_;
 		guesses_.push_back(inputChar);
 	}
 
@@ -166,7 +188,7 @@ void Manager::runGuess()
 bool Manager::checkOver(bool& playerWon)
 {
 	// If they have guessed away all their lives, the computer wins.
-	if (livesLeft_ == 0) {
+	if (health_ == 0) {
 		playerWon = false;
 		return true;
 	}
@@ -257,6 +279,25 @@ void Manager::displayGuesses()
 
 		std::cout << *lastGuess << " ]\n";
 	}
+}
+
+
+
+void Manager::displayLives(const std::string& name, std::size_t lives)
+{
+	/*std::cout << "You have " <<
+		ColorCodes::doB(lives_) << " lives left.\n";
+
+	std::cout << "The computer has " <<
+		ColorCodes::doB(computerLives_) << " lives left.\n";*/
+
+
+	std::string livesWord = "lives";
+	if (lives == 1)
+		livesWord = "life";
+
+	std::cout << name << " has " << ColorCodes::doB(lives) <<
+		" " << livesWord << " left.\n";
 }
 
 

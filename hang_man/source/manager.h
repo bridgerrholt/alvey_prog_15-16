@@ -47,6 +47,8 @@ private:
 	void displayRevealedLetters();
 	// Prints the list of guesses, surrounded in brackets.
 	void displayGuesses();
+	// Prints your lives and the computer's lives.
+	void displayLives(const std::string& name, std::size_t lives);
 
 	// Makes a list of all the words in the given file.
 	void loadDictionary();
@@ -76,8 +78,15 @@ private:
 	std::vector<char> guesses_;
 
 	// Amount of guesses before they lose.
+	std::size_t healthMax_;
+	std::size_t health_;
+
+	// Amount of lives before game over.
+	std::size_t livesMax_;
 	std::size_t lives_;
-	std::size_t livesLeft_;
+
+	std::size_t computerLivesMax_;
+	std::size_t computerLives_;
 
 
 	// Path for the file of text images.
