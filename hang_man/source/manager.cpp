@@ -16,6 +16,7 @@
 #include <constants.h>
 #include <rand_range.h>
 #include <get_stripped_input.h>
+#include <is_integer.h>
 #include <get_lowered.h>
 
 Manager::Letter::Letter(char contentSet) :
@@ -57,6 +58,38 @@ Manager::Manager(
 
 void Manager::run()
 {
+	std::cout <<
+		" 1: Easy\n"
+		" 2: Medium\n"
+		" 3: Hard\n\n"
+		"Select difficulty:";
+
+	
+
+	int difficulty;
+
+	do {
+		std::string input =
+			getLowered(inputHandler_.askStripped());
+
+		if (!isInteger(input)) {
+			std::cout << "Must be an integer.";
+			continue;
+		}
+		else {
+			difficulty = patch::stoi(input);
+			if (difficulty < 1 || difficulty > 3) {
+				std::cout << "Out of range.";
+				continue;
+			}
+
+			break;
+		}
+
+	} while (true);
+
+
+
 	lives_ = livesMax_;
 	computerLives_ = computerLivesMax_;
 
