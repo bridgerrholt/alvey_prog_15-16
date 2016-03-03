@@ -64,8 +64,8 @@ void Manager::run()
 		health_ = healthMax_;
 		guesses_ = std::vector<char>();
 
-		displayLives("You", lives_);
-		displayLives("The computer", computerLives_);
+		displayLives("You have", lives_);
+		displayLives("The computer has", computerLives_);
 		selectWord();
 
 		// Play until the player wins or loses.
@@ -283,7 +283,7 @@ void Manager::displayGuesses()
 
 
 
-void Manager::displayLives(const std::string& name, std::size_t lives)
+void Manager::displayLives(const std::string& start, std::size_t lives)
 {
 	/*std::cout << "You have " <<
 		ColorCodes::doB(lives_) << " lives left.\n";
@@ -296,7 +296,7 @@ void Manager::displayLives(const std::string& name, std::size_t lives)
 	if (lives == 1)
 		livesWord = "life";
 
-	std::cout << name << " has " << ColorCodes::doB(lives) <<
+	std::cout << start << " " << ColorCodes::doB(lives) <<
 		" " << livesWord << " left.\n";
 }
 

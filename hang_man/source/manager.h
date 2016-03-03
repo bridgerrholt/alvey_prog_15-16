@@ -48,7 +48,7 @@ private:
 	// Prints the list of guesses, surrounded in brackets.
 	void displayGuesses();
 	// Prints your lives and the computer's lives.
-	void displayLives(const std::string& name, std::size_t lives);
+	void displayLives(const std::string& start, std::size_t lives);
 
 	// Makes a list of all the words in the given file.
 	void loadDictionary();

@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
 	// Object that takes control to run a game on command,
 	// given the list of words and the data for displaying the man.
 	Manager manager(inputHandler,
-		"../dictionaries/american-english.txt",
+		"../dictionaries/american-english-no-accents.txt",
 		"text_images/man");
 
 	// Play games until the player requests to quit.
