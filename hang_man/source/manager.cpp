@@ -64,10 +64,6 @@ void Manager::run()
 		" 3: Hard\n\n"
 		"Select difficulty:";
 
-	
-
-	int difficulty;
-
 	while (true) {
 		std::string input =
 			getLowered(inputHandler_.askStripped());
@@ -77,8 +73,8 @@ void Manager::run()
 			continue;
 		}
 
-		difficulty = patch::stoi(input);
-		if (difficulty < 1 || difficulty > 3) {
+		difficulty_ = patch::stoi(input);
+		if (difficulty_ < 1 || difficulty_ > 3) {
 			std::cout << "Out of range.";
 			continue;
 		}
@@ -86,12 +82,36 @@ void Manager::run()
 		break;
 	}
 
+	playerWins_ = 0;
+	computerWins_ = 0;
+
+	while (true) {
+		runGame();
+
+		// Restart if the player requests to.
+		std::string input =
+			getLowered(inputHandler_.askStripped("Reset? (y/n)"));
+		if (input == "y")
+			break;
+	}
+	
+
+}
+
+
+
+void Manager::runGame()
+{
+	std::cout << '\n' <<
+		ColorCodes::doB(" Scoreboard") << "\n"
+		"Player    " << playerWins_ << "\n"
+		"Computer  " << computerWins_ << "\n\n";
 
 	lives_ = livesMax_;
 	computerLives_ = computerLivesMax_;
 
 	while (lives_ >= 1 && computerLives_ >= 1) {
-		health_ = healthMax_ - (difficulty-1);
+		health_ = healthMax_ - (difficulty_-1);
 		guesses_ = std::vector<char>();
 
 		displayLives("You have", lives_);
@@ -124,16 +144,21 @@ void Manager::run()
 		std::cout << std::endl;
 	}
 
+	std::cout << "You ";
+
 	// If the player lost.
 	if (lives_ == 0) {
-		std::cout << ColorCodes::doB("GAME OVER") << "\n";
+		std::cout << ColorCodes::doB("lose");
+		++computerWins_;
 	}
 
-	// If the computer lost.
+	// If player won.
 	else {
-		std::cout << "You beat the computer!\n";
+		std::cout << ColorCodes::doB("win");
+		++playerWins_;
 	}
 
+	std::cout << "!\n\n";
 }
 
 

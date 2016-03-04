@@ -18,7 +18,7 @@ public:
 		const std::string& dictionaryFileName,
 		const std::string& imagesFileName);
 
-	// Runs a single game.
+	// Runs all the games.
 	void run();
 
 private:
@@ -34,6 +34,7 @@ private:
 		char content;
 	};
 
+	void runGame();
 	void runGuess();
 	bool checkOver(bool& playerWon);
 
@@ -77,6 +78,9 @@ private:
 	// All the letters guessed so far for the current word.
 	std::vector<char> guesses_;
 
+	std::size_t playerWins_;
+	std::size_t computerWins_;
+
 	// Amount of guesses before they lose.
 	std::size_t healthMax_;
 	std::size_t health_;
@@ -87,6 +91,8 @@ private:
 
 	std::size_t computerLivesMax_;
 	std::size_t computerLives_;
+
+	int difficulty_;
 
 
 	// Path for the file of text images.
