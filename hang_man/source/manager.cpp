@@ -46,7 +46,7 @@ Manager::Manager(
 		dictionaryFileName_(dictionaryFileName),
 		imagesFileName_(imagesFileName),
 
-		healthMax_(6),
+		healthMax_(7),
 		livesMax_(3),
 		computerLivesMax_(3)
 {
@@ -68,7 +68,7 @@ void Manager::run()
 
 	int difficulty;
 
-	do {
+	while (true) {
 		std::string input =
 			getLowered(inputHandler_.askStripped());
 
@@ -76,25 +76,22 @@ void Manager::run()
 			std::cout << "Must be an integer.";
 			continue;
 		}
-		else {
-			difficulty = patch::stoi(input);
-			if (difficulty < 1 || difficulty > 3) {
-				std::cout << "Out of range.";
-				continue;
-			}
 
-			break;
+		difficulty = patch::stoi(input);
+		if (difficulty < 1 || difficulty > 3) {
+			std::cout << "Out of range.";
+			continue;
 		}
 
-	} while (true);
-
+		break;
+	}
 
 
 	lives_ = livesMax_;
 	computerLives_ = computerLivesMax_;
 
 	while (lives_ >= 1 && computerLives_ >= 1) {
-		health_ = healthMax_;
+		health_ = healthMax_ - (difficulty-1);
 		guesses_ = std::vector<char>();
 
 		displayLives("You have", lives_);
@@ -249,7 +246,8 @@ bool Manager::checkOver(bool& playerWon)
 
 void Manager::displayImage()
 {
-	std::cout << images_.at(guesses_.size());
+	//std::cout << images_.at(guesses_.size());
+	std::cout << images_.at(healthMax_ - health_);
 	std::cout << '\n';
 }
 
