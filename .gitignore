@@ -5,6 +5,7 @@ sftp-config.json
 *.dmg
 *.app
 visual_project
+alvey_explorer
 */binary_search/binary_search
 */encryption/encryption
 */game_of_pig/game_of_pig
