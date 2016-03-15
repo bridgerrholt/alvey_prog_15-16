@@ -4,21 +4,24 @@
 #define INPUT_HANDLER_H
 
 #include <string>
+#include <vector>
 
 class InputHandler
 {
 public:
-	InputHandler();
+	InputHandler(const std::string& defaultEnding);
 
 	// Simply displays either the default question or the given question.
 	void printQuestion();
 	void printQuestion(
 		const std::string& question,
-		bool useDefaultEnding = true);
+		bool useDefaultEnding = true,
+		std::size_t defaultEndingIndex = 0);
 	void printQuestion(
 		const std::string& question,
 		const std::string& ending,
-		bool useDefaultEnding = false);
+		bool useDefaultEnding = false,
+		std::size_t defaultEndingIndex = 0);
 
 
 	// Before the input is collected, the default question and ending are both
@@ -32,7 +35,8 @@ public:
 	std::string askRaw();
 	std::string askRaw(
 		const std::string& question,
-		bool useDefaultEnding = true);
+		bool useDefaultEnding = false,
+		std::size_t defaultEndingIndex = 0);
 	std::string askRaw(
 		const std::string& question,
 		const std::string& ending);
@@ -42,7 +46,8 @@ public:
 	std::string askStripped();
 	std::string askStripped(
 		const std::string& question,
-		bool useDefaultEnding = true);
+		bool useDefaultEnding = false,
+		std::size_t defaultEndingIndex = 0);
 	std::string askStripped(
 		const std::string& question,
 		const std::string& ending);
@@ -52,7 +57,7 @@ public:
 	void setDefaultQuestion(
 		const std::string& defaultQuestion);
 
-	void setDefaultEnding(
+	void pushDefaultEnding(
 		const std::string& defaultEnding);
 
 
@@ -62,7 +67,7 @@ private:
 
 	// Displayed after the question unless a different ending is provided or
 	// explicitly stated otherwise.
-	std::string defaultEnding_;
+	std::vector<std::string> defaultEndings_;
 };
 
 #endif

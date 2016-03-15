@@ -3,9 +3,9 @@
 #include <iostream>
 #include <ctype.h>
 
-InputHandler::InputHandler()
+InputHandler::InputHandler(const std::string& defaultEnding)
 {
-
+	defaultEndings_.push_back(defaultEnding);
 }
 
 
@@ -13,28 +13,30 @@ InputHandler::InputHandler()
 // printQuestion
 void InputHandler::printQuestion()
 {
-	std::cout << defaultQuestion_ << defaultEnding_;
+	std::cout << defaultQuestion_ << defaultEndings_.at(0);
 }
 
 void InputHandler::printQuestion(
 	const std::string& question,
-	bool useDefaultEnding)
+	bool useDefaultEnding,
+	std::size_t defaultEndingIndex)
 {
 	std::cout << question;
 
 	if (useDefaultEnding)
-		std::cout << defaultEnding_;
+		std::cout << defaultEndings_.at(defaultEndingIndex);
 }
 
 void InputHandler::printQuestion(
 	const std::string& question,
 	const std::string& ending,
-	bool useDefaultEnding)
+	bool useDefaultEnding,
+	std::size_t defaultEndingIndex)
 {
 	std::cout << question;
 
 	if (useDefaultEnding) {
-		std::cout << defaultEnding_;
+		std::cout << defaultEndings_.at(defaultEndingIndex);
 	}
 	else {
 		std::cout << ending;
@@ -70,9 +72,10 @@ std::string InputHandler::askRaw()
 
 std::string InputHandler::askRaw(
 	const std::string& question,
-	bool useDefaultEnding)
+	bool useDefaultEnding,
+	std::size_t defaultEndingIndex)
 {
-	printQuestion(question, useDefaultEnding);
+	printQuestion(question, useDefaultEnding, defaultEndingIndex);
 	return getRawInput();
 }
 
@@ -136,9 +139,10 @@ std::string InputHandler::askStripped()
 
 std::string InputHandler::askStripped(
 	const std::string& question,
-	bool useDefaultEnding)
+	bool useDefaultEnding,
+	std::size_t defaultEndingIndex)
 {
-	printQuestion(question, useDefaultEnding);
+	printQuestion(question, useDefaultEnding, defaultEndingIndex);
 	return getStrippedInput();
 }
 
@@ -160,9 +164,9 @@ void InputHandler::setDefaultQuestion(const std::string& defaultQuestion)
 }
 
 
-void InputHandler::setDefaultEnding(const std::string& defaultEnding)
+void InputHandler::pushDefaultEnding(const std::string& defaultEnding)
 {
-	defaultEnding_ = defaultEnding;
+	defaultEndings_.push_back(defaultEnding);
 }
 
 
