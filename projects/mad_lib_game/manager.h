@@ -12,11 +12,11 @@
 namespace mad_lib
 {
 
-class Manager : explorer::Manager
+class Manager : public explorer::Manager
 {
 public:
 	// Loads and parses the file.
-	Manager(std::string fileName);
+	Manager(explorer::Manager baseManager);
 
 	// Asks the questions and prints the story.
 	void run();

@@ -13,7 +13,10 @@
 
 using namespace mad_lib;
 
-Manager::Manager(std::string fileName)
+Manager::Manager(explorer::Manager baseManager,
+	const std::string& fileName) :
+
+	explorer::Manager(baseManager)
 {
 	// Text in between splits.
 	std::string currentString = "";

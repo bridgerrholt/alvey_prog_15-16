@@ -39,21 +39,23 @@ std::string Manager::Letter::getChar()
 }
 
 
-
 Manager::Manager(
-	InputHandler& inputHandler,
+	const explorer::Manager& baseManager,
 	const std::string& dictionaryFileName,
 	const std::string& imagesFileName) :
-		inputHandler_(inputHandler),
-		dictionaryFileName_(dictionaryFileName),
-		imagesFileName_(imagesFileName),
 
-		healthMax_(7),
-		livesMax_(3),
-		computerLivesMax_(3)
+	explorer::Manager(baseManager)
 {
+	dictionaryFileName_ = dictionaryFileName;
+	imagesFileName_ = imagesFileName;
+
+	healthMax_ = 7;
+	livesMax_ = 3;
+	computerLivesMax_ = 3;
+
 	loadDictionary();
 	loadImages();
+
 }
 
 

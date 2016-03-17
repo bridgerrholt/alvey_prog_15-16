@@ -14,7 +14,7 @@ class Manager
 {
 public:
 	// Constructors.
-	Manager(InputHandler& inputHandler,
+	Manager(const explorer::Manager& baseManager,
 		const std::string& dictionaryFileName,
 		const std::string& imagesFileName);
 

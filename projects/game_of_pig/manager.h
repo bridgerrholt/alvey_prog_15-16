@@ -11,11 +11,11 @@
 namespace game_of_pig
 {
 
-class Manager : explorer::Manager
+class Manager : public explorer::Manager
 {
 public:
 	// Constructors.
-	Manager(InputHandler& inputHandler, unsigned int pointsNeeded);
+	Manager(const explorer::Manager& baseManager, unsigned int pointsNeeded);
 
 	// Runs a single game.
 	void run();
@@ -31,7 +31,7 @@ private:
 	unsigned int rollDie(unsigned int sides = 6);
 
 	// The input handler is made before the manager's construction.
-	InputHandler& inputHandler_;
+	//InputHandler& inputHandler_;
 
 	// The number of points a player needs to win.
 	unsigned int pointsNeeded_;

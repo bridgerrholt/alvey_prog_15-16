@@ -3,18 +3,23 @@
 #ifndef EXPLORER_MANAGER_H
 #define EXPLORER_MANAGER_H
 
+#include <fail_handler.h>
+
+class InputHandler;
+
 namespace explorer
 {
 
 class Manager
 {
 public:
-	Manager();
+	Manager(InputHandler& inputHandler);
 
 	virtual void run() {}
 
-private:
-
+protected:
+	FailHandler fail_;
+	InputHandler& inputHandler_;
 
 };
 

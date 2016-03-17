@@ -11,11 +11,11 @@
 namespace encryption
 {
 
-class Manager : explorer::Manager
+class Manager : public explorer::Manager
 {
 public:
 	// Constructors.
-	Manager(InputHandler& inputHandler);
+	Manager(const explorer::Manager& baseManager);
 
 	// Runs a single game.
 	void run();
@@ -44,7 +44,7 @@ private:
 	void runSubstitution();
 
 	// The input handler is made before the manager's construction.
-	InputHandler& inputHandler_;
+	//InputHandler& inputHandler_;
 
 	std::string password_;
 

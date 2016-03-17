@@ -10,8 +10,8 @@
 
 using namespace encryption;
 
-Manager::Manager(InputHandler& inputHandler) :
-	inputHandler_(inputHandler)
+Manager::Manager(const explorer::Manager& baseManager) :
+	explorer::Manager(baseManager)
 {
 
 }

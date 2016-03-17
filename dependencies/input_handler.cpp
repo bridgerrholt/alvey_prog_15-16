@@ -24,6 +24,8 @@ void InputHandler::printQuestion(
 	std::cout << question;
 
 	if (useDefaultEnding)
+		std::cout << defaultEndings_.at(0);
+	else
 		std::cout << defaultEndings_.at(defaultEndingIndex);
 }
 

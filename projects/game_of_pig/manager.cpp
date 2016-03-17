@@ -10,10 +10,10 @@
 
 using namespace game_of_pig;
 
-Manager::Manager(InputHandler& inputHandler, unsigned int pointsNeeded) :
-	pointsNeeded_(pointsNeeded), inputHandler_(inputHandler)
+Manager::Manager(const explorer::Manager& baseManager, unsigned int pointsNeeded) :
+	explorer::Manager(baseManager)
 {
-
+	pointsNeeded_ = pointsNeeded;
 }
 
 

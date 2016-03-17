@@ -2,7 +2,8 @@
 
 using namespace explorer;
 
-Manager::Manager()
+Manager::Manager(InputHandler& inputHandler) :
+	inputHandler_(inputHandler)
 {
 	
 }

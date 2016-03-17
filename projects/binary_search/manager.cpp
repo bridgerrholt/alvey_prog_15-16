@@ -1,9 +1,12 @@
+#include "manager.h"
+
 #include <math.h>
 #include <exception>
 
 #include <iostream>
 #include <string>
 
+#include <input_handler.h>
 #include <get_stripped_input.h>
 #include <is_integer.h>
 #include <constants.h>
@@ -11,33 +14,31 @@
 #include <patch/stoi.h>
 #include <patch/to_string.h>
 
-#include "manager.h"
-
 using namespace binary_search;
 
-Manager::Manager() : guessCount_(0), fail_(false)
+Manager::Manager(const explorer::Manager& baseManager) :
+	explorer::Manager(baseManager)
 {
-
+	guessCount_ = 0;
 }
 
 
 
 void Manager::run() {
 	// Ask for the range.
-	std::cout << "Enter the range (min,max):\n";
+	inputHandler_.printQuestion("Enter the range (min,max):", false, 1);
 	std::string strippedInput;
 
 	// Repeat if failed.
 	while (true) {
 		// Get the input.
-		std::cout << " ";
 		strippedInput = getStrippedInput();
 
 		std::string minString = "";
 		std::string maxString = "";
 
 		bool foundDivisor = false;
-		resetFail();
+		fail_.reset();
 
 		// Parse through, fail if ',' is not found.
 		for (auto i = strippedInput.begin(); i != strippedInput.end(); ++i) {
@@ -60,28 +61,28 @@ void Manager::run() {
 
 		// Fail if no ',' was found.
 		if (!foundDivisor) {
-			makeError("Must have a divisor.");
+			fail_.error("Must have a divisor.");
 			continue;
 		}
 
 		// Fail if missing a value.
 		checkEmptyValue(minString, "minimum");
 		checkEmptyValue(maxString, "maximum");
-		if (fail_) continue;
+		if (fail_.get()) continue;
 
 		// Fail if the values aren't integers.
 		checkValueInteger(minString, "minimum");
 		checkValueInteger(maxString, "maximum");
-		if (fail_) continue;
+		if (fail_.get()) continue;
 
 		// Fail if a value is too small or too large for the Number type.
 		min_ = valueToNumber(minString, "minimum");
 		max_ = valueToNumber(maxString, "maximum");
-		if (fail_) continue;
+		if (fail_.get()) continue;
 
 		// Fail if the minimum value is not less than the maximum value.
 		if (min_ >= max_) {
-			makeError("The minimum value must be less than the maximum value.");
+			fail_.error("The minimum value must be less than the maximum value.");
 			continue;
 		}
 
@@ -138,7 +139,7 @@ void Manager::makeGuess()
 	// Execute once, continue to if the fail_ flag is true.
 	do {
 		// Reset the fail_ flag, it is used.
-		resetFail();
+		fail_.reset();
 
 		// Get the input.
 		std::cout << ColorCodes::doB(patch::to_string(guess)) << " is ";
@@ -149,7 +150,7 @@ void Manager::makeGuess()
 			// If the guess is the minimum value,
 			// it can't be greater than the actual number.
 			if (guess == min_)
-				makeError("This guess is the minimum.");
+				fail_.error("This guess is the minimum.");
 
 			else
 				// Since our maximum was too high, set it lower.
@@ -161,7 +162,7 @@ void Manager::makeGuess()
 			// If the guess is the maximum value,
 			// it can't be less than the actual number.
 			if (guess == max_)
-				makeError("This guess is the maximum.");
+				fail_.error("This guess is the maximum.");
 			else
 				// Since our minimum was too low, set it higher.
 				min_ = guess+1;
@@ -178,28 +179,13 @@ void Manager::makeGuess()
 		else {
 			// Fail if no data inputted.
 			if (strippedInput == "")
-				makeError("Must have an input.");
+				fail_.error("Must have an input.");
 
 			// Otherwise fail if something else.
 			else
-				makeError("Must be '>', '<', or '='."); 
+				fail_.error("Must be '>', '<', or '='."); 
 		}
-	} while (fail_);
-}
-
-
-
-void Manager::makeError(const std::string& errorString)
-{
-	std::cout << errorString << '\n';
-	fail_ = true;
-}
-
-
-
-void Manager::resetFail()
-{
-	fail_ = false;
+	} while (fail_.get());
 }
 
 
@@ -207,7 +193,7 @@ void Manager::resetFail()
 void Manager::checkEmptyValue(std::string input, std::string name)
 {
 	if (input == "") {
-		makeError("Must have a " + name + " value.");
+		fail_.error("Must have a " + name + " value.");
 	}
 }
 
@@ -216,7 +202,7 @@ void Manager::checkEmptyValue(std::string input, std::string name)
 void Manager::checkValueInteger(std::string input, std::string name)
 {
 	if (!isInteger(input)) {
-		makeError("Value " + name + " must be an integer.");
+		fail_.error("Value " + name + " must be an integer.");
 	}
 }
 
@@ -229,7 +215,7 @@ Manager::Number Manager::valueToNumber(std::string input, std::string name)
 		returnNum = patch::stoi(input);
 	}
 	catch (std::exception& e) {
-		makeError("The " + name + " value is out of range.");
+		fail_.error("The " + name + " value is out of range.");
 	}
 
 	return returnNum;

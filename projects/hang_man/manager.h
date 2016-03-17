@@ -15,11 +15,12 @@
 namespace hang_man
 {
 
-class Manager : explorer::Manager
+class Manager : public explorer::Manager
 {
 public:
 	// Constructors.
-	Manager(InputHandler& inputHandler,
+	Manager(
+		const explorer::Manager& baseManager,
 		const std::string& dictionaryFileName,
 		const std::string& imagesFileName);
 
@@ -65,8 +66,8 @@ private:
 	void loadImages();
 
 
-	InputHandler& inputHandler_;
-	FailHandler fail_;
+	//InputHandler& inputHandler_;
+	//FailHandler fail_;
 
 	// Path for the file of words.
 	std::string dictionaryFileName_;

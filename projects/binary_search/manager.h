@@ -10,11 +10,11 @@
 namespace binary_search
 {
 
-class Manager : explorer::Manager
+class Manager : public explorer::Manager
 {
 public:
 	// Constructors.
-	Manager();
+	Manager(const explorer::Manager& baseManager);
 
 	// Runs a single game.
 	void run();
@@ -27,11 +27,6 @@ private:
 	// target number.
 	void makeGuess();
 
-	// Print an error plus a newline, set fail to true.
-	void makeError(const std::string& errorString);
-	// Sets fail_ to false;
-	void resetFail();
-
 	// All the error checking functions.
 	void checkEmptyValue(std::string input, std::string name);
 	void checkValueInteger(std::string input, std::string name);
@@ -39,9 +34,6 @@ private:
 
 	// Sets the difference appropriately.
 	void calculateDifference();
-
-	// Tracks if any failures have occured.
-	bool fail_;
 
 	// The range.
 	Number min_;
