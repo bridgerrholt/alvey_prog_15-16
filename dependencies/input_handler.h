@@ -19,6 +19,9 @@ public:
 		std::size_t defaultEndingIndex = 0);
 	void printQuestion(
 		const std::string& question,
+		std::size_t defaultEndingIndex);
+	void printQuestion(
+		const std::string& question,
 		const std::string& ending,
 		bool useDefaultEnding = false,
 		std::size_t defaultEndingIndex = 0);
@@ -48,6 +51,9 @@ public:
 		const std::string& question,
 		bool useDefaultEnding = false,
 		std::size_t defaultEndingIndex = 0);
+	std::string askStripped(
+		const std::string& question,
+		std::size_t defaultEndingIndex);
 	std::string askStripped(
 		const std::string& question,
 		const std::string& ending);

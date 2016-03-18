@@ -16,7 +16,8 @@ class Manager : public explorer::Manager
 {
 public:
 	// Loads and parses the file.
-	Manager(explorer::Manager baseManager);
+	Manager(explorer::Manager baseManager,
+		const std::string& fileName);
 
 	// Asks the questions and prints the story.
 	void run();

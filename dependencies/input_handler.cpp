@@ -24,9 +24,14 @@ void InputHandler::printQuestion(
 	std::cout << question;
 
 	if (useDefaultEnding)
-		std::cout << defaultEndings_.at(0);
-	else
 		std::cout << defaultEndings_.at(defaultEndingIndex);
+}
+
+void InputHandler::printQuestion(
+	const std::string& question,
+	std::size_t defaultEndingIndex)
+{
+	std::cout << question << defaultEndings_.at(defaultEndingIndex);
 }
 
 void InputHandler::printQuestion(
@@ -80,6 +85,7 @@ std::string InputHandler::askRaw(
 	printQuestion(question, useDefaultEnding, defaultEndingIndex);
 	return getRawInput();
 }
+
 
 std::string InputHandler::askRaw(
 	const std::string& question,
@@ -145,6 +151,14 @@ std::string InputHandler::askStripped(
 	std::size_t defaultEndingIndex)
 {
 	printQuestion(question, useDefaultEnding, defaultEndingIndex);
+	return getStrippedInput();
+}
+
+std::string InputHandler::askStripped(
+	const std::string& question,
+	std::size_t defaultEndingIndex)
+{
+	printQuestion(question, true, defaultEndingIndex);
 	return getStrippedInput();
 }
 

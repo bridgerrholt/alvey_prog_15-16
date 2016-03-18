@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
 			currentManager->run();
 
 			std::string userInput;
-			inputHandler.printQuestion("Play the [S]ame, Play [A]nother, [Q]uit:");
+			inputHandler.printQuestion("\nPlay the [S]ame, Play [A]nother, [Q]uit:");
 
 			bool toPlayAnother = false;
 
@@ -93,6 +93,8 @@ int main(int argc, char* argv[])
 					inputHandler.printQuestion("Invalid input");
 				}
 			}
+
+			std::cout << "\n";
 
 			if (toPlayAnother || toQuit)
 				break;

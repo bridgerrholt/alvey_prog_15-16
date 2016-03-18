@@ -23,6 +23,9 @@ private:
 	// The type of number to be used for the range.
 	typedef long int Number;
 
+	// Resets variables that must be fresh each run.
+	void reset();
+
 	// Asks if the given number is greater than or less than the
 	// target number.
 	void makeGuess();

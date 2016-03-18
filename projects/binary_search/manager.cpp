@@ -19,20 +19,22 @@ using namespace binary_search;
 Manager::Manager(const explorer::Manager& baseManager) :
 	explorer::Manager(baseManager)
 {
-	guessCount_ = 0;
+	reset();
 }
 
 
 
 void Manager::run() {
+	reset();
+
 	// Ask for the range.
-	inputHandler_.printQuestion("Enter the range (min,max):", false, 1);
+	inputHandler_.printQuestion("Enter the range (min,max):");
 	std::string strippedInput;
 
 	// Repeat if failed.
 	while (true) {
 		// Get the input.
-		strippedInput = getStrippedInput();
+		strippedInput = inputHandler_.askStripped("", std::size_t(1));
 
 		std::string minString = "";
 		std::string maxString = "";
@@ -118,6 +120,12 @@ void Manager::run() {
 		guessCount_ << " " << guessString << ")\n";
 }
 
+
+
+void Manager::reset()
+{
+	guessCount_ = 0;
+}
 
 
 void Manager::makeGuess()
