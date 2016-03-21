@@ -8,16 +8,18 @@
 
 using namespace mad_lib;
 
-FileSelector::FileSelector() : path_("")
+FileSelector::FileSelector() :
+	path_(""),
+	isPreventingFile_(false)
 {
 
 }
 
 
 
-FileSelector::FileSelector(const std::string& path) : path_(path)
+FileSelector::FileSelector(const std::string& path) : FileSelector()
 {
-
+	path_ = path;
 }
 
 
@@ -39,9 +41,13 @@ std::string FileSelector::getRandomFileName()
 	// reset the cycle.
 	if (remainingIndexes_.size() <= 0) {
 		for (std::size_t i = 0; i < fileNames_.size(); ++i) {
-			remainingIndexes_.push_back(i);
+			// Don't add the file if it's being prevented.
+			if (!(isPreventingFile_ && preventedFileIndex_))
+				remainingIndexes_.push_back(i);
 		}
 	}
+
+	isPreventingFile_ = false;
 
 	// Get a random index from the remainingIndexes_ container.
 	std::size_t index = randRange(0, remainingIndexes_.size());
@@ -50,6 +56,20 @@ std::string FileSelector::getRandomFileName()
 	// Erase it from the remainingIndexes_ container.
 	remainingIndexes_.erase(remainingIndexes_.begin()+index);
 
+	// If the cycle is finished, prevent the current file from being added
+	// to the new cycle the next run.
+	if (remainingIndexes_.size() == 0) {
+		// Don't prevent it if there's only 1 file.
+		if (fileNames_.size() > 1) {
+			isPreventingFile_ = true;
+			preventedFileIndex_ = fileNameIndex;
+		}
+	}
+
 	// Return the file name.
 	return fileNames_[fileNameIndex];
 }
+
+
+
+

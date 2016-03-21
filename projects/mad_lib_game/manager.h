@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "../explorer/manager.h"
+#include "file_selector.h"
 
 namespace mad_lib
 {
@@ -17,7 +18,7 @@ class Manager : public explorer::Manager
 public:
 	// Loads and parses the file.
 	Manager(explorer::Manager baseManager,
-		const std::string& fileName);
+		const std::string& pathName);
 
 	// Asks the questions and prints the story.
 	void run();
@@ -36,15 +37,21 @@ private:
 		std::string content;
 	};
 
+	void reset();
+
 	// Turns all the text into a list of strings,
 	// in between each string is an input object.
-	void parseFile();
+	void pullFile();
+
+	FileSelector fileSelector_;
 
 	// The actual text of the story.
 	std::vector<std::string> storyTexts_;
 
 	// The labels and content of the objects to be inputted.
 	std::vector<InputObject> inputObjects_;
+
+	bool alreadyPlayed_;
 
 };
 

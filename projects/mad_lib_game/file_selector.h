@@ -39,6 +39,9 @@ private:
 	// Indexes for file names that haven't been used yet.
 	std::vector<std::size_t> remainingIndexes_;
 
+	bool isPreventingFile_;
+	std::size_t preventedFileIndex_;
+
 };
 
 }

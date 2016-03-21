@@ -18,6 +18,13 @@ using namespace explorer;
 
 int main(int argc, char* argv[])
 {
+	// Seed the RNG with the current time.
+	auto currentDuration =
+		std::chrono::system_clock::now().time_since_epoch();
+	auto currentMilliseconds = std::chrono::duration_cast<
+		std::chrono::milliseconds>(currentDuration).count();
+	srand(currentMilliseconds);
+
 	std::unique_ptr<Manager> currentManager;
 	ProjectSelector projectSelector;
 	projectSelector.pushProject("Binary Search", "B");
@@ -38,11 +45,19 @@ int main(int argc, char* argv[])
 		std::string projectSelection;
 		std::size_t projectIndex;
 
-		do {
+		while (true) {
 			projectSelection = inputHandler.askStripped("");
 
-		} while (!projectSelector.findProject(
-			projectSelection, projectIndex));
+			// If valid input, stop asking.
+			if (projectSelector.findProject(
+				projectSelection, projectIndex)) {
+				break;
+			}
+			// Otherwise it's invalid, keep asking.
+			else {
+				inputHandler.printQuestion("Invalid input");
+			}
+		}
 
 		switch (projectIndex) {
 		case 0:
@@ -63,9 +78,10 @@ int main(int argc, char* argv[])
 				"../../dictionaries/american-english-no-accents.txt",
 				"text_images/man.txt"));
 			break;
-		/*case 4:
-			currentManager = std::unique_ptr<Manager>(new mad_lib::Manager(baseManager, const std::string& fileName));
-			break;*/
+		case 4:
+			currentManager = std::unique_ptr<Manager>(
+				new mad_lib::Manager(baseManager, "projects/mad_lib_game/stories/"));
+			break;
 		default:
 			return 0;
 		}
@@ -75,7 +91,7 @@ int main(int argc, char* argv[])
 			currentManager->run();
 
 			std::string userInput;
-			inputHandler.printQuestion("\nPlay the [S]ame, Play [A]nother, [Q]uit:");
+			inputHandler.printQuestion("\nPlay the [S]ame, [A]nother, or [Q]uit?");
 
 			bool toPlayAnother = false;
 
