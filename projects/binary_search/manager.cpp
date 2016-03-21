@@ -19,7 +19,7 @@ using namespace binary_search;
 Manager::Manager(const explorer::Manager& baseManager) :
 	explorer::Manager(baseManager)
 {
-	reset();
+	
 }
 
 

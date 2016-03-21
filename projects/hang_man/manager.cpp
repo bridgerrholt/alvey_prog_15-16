@@ -46,8 +46,9 @@ Manager::Manager(
 
 	explorer::Manager(baseManager)
 {
-	dictionaryFileName_ = dictionaryFileName;
-	imagesFileName_ = imagesFileName;
+	std::string directory = "projects/hang_man/";
+	dictionaryFileName_ = directory + dictionaryFileName;
+	imagesFileName_ = directory + imagesFileName;
 
 	healthMax_ = 7;
 	livesMax_ = 3;

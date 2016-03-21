@@ -46,18 +46,22 @@ int main(int argc, char* argv[])
 
 		switch (projectIndex) {
 		case 0:
-			currentManager = std::unique_ptr<Manager>(new binary_search::Manager(baseManager));
+			currentManager = std::unique_ptr<Manager>(
+				new binary_search::Manager(baseManager));
 			break;
 		case 1:
-			currentManager = std::unique_ptr<Manager>(new encryption::Manager(baseManager));
+			currentManager = std::unique_ptr<Manager>(
+				new encryption::Manager(baseManager));
 			break;
 		case 2:
-			currentManager = std::unique_ptr<Manager>(new game_of_pig::Manager(baseManager, 100));
+			currentManager = std::unique_ptr<Manager>(
+				new game_of_pig::Manager(baseManager, 100));
 			break;
 		case 3:
-			currentManager = std::unique_ptr<Manager>(new hang_man::Manager(baseManager,
-				"../dictionaries/american-english-no-accents.txt",
-				"text_images/man"));
+			currentManager = std::unique_ptr<Manager>(
+				new hang_man::Manager(baseManager,
+				"../../dictionaries/american-english-no-accents.txt",
+				"text_images/man.txt"));
 			break;
 		/*case 4:
 			currentManager = std::unique_ptr<Manager>(new mad_lib::Manager(baseManager, const std::string& fileName));
