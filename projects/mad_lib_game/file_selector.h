@@ -30,6 +30,8 @@ public:
 		const { return remainingIndexes_.size(); }
 
 private:
+	void printData();
+
 	// Concatenated to the beginning of all future file name strings.
 	std::string path_;
 
