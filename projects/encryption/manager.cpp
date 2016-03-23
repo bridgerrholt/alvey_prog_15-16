@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <array>
 
 #include <constants.h>
 #include <rand_range.h>
@@ -20,34 +21,55 @@ Manager::Manager(const explorer::Manager& baseManager) :
 
 void Manager::run()
 {
-	while (true) {
-		input_ = askInput();
-		if (input_ == QUIT)
-			return;
-		std::cout << "\n";
+	input_ = askInput();
+	if (input_ == QUIT)
+		return;
+	std::cout << "\n";
 
-		EncryptionMethod method = askMethod();
-		std::cout << "\n";
-		password_ = askPassword();
-		std::cout << "\n";
-		
+	EncryptionMethod method = askMethod();
+	std::cout << "\n";
+	password_ = askPassword();
+	std::cout << "\n";
 
-		switch (method) {
-		case CAESARIAN:
-			runCaesarian();
-			break;
+	std::string fileNameLabel = "input";
+	std::string& fileNameVar = inputFileName_;
 
-		case PSEUDO_RANDOM:
-			runPseudoRandom();
-			break;
+	for (std::size_t i = 0; i < 2; ++i) {
+		std::cout << "Enter " + fileNameLabel + " file name:";
 
-		case SUBSTITUTION:
-			runSubstitution();
-			break;
+		while (true) {
+			fileNameVar =
+				inputHandler_.askStripped("", true, std::size_t(1));
+
+			if (fileNameVar == "") {
+				std::cout << "Invalid input.";
+			}
+			else {
+				break;
+			}
+
 		}
 
+		if (i == 0) {
+			fileNameLabel = "ouput";
+			fileNameVar = outputFileName_;
+		}
+	};
 
+	switch (method) {
+	case CAESARIAN:
+		runCaesarian();
+		break;
+
+	case PSEUDO_RANDOM:
+		runPseudoRandom();
+		break;
+
+	case SUBSTITUTION:
+		runSubstitution();
+		break;
 	}
+
 
 }
 
@@ -56,9 +78,9 @@ void Manager::run()
 Manager::InputChoice Manager::askInput()
 {
 	std::cout <<
-		"(e)ncrypt\n"
-		"(d)ecrypt\n"
-		"(q)uit\n"
+		"[E]ncrypt\n"
+		"[D]ecrypt\n"
+		"[Q]uit\n"
 		"What would you like to do?";
 
 	while (true) {
@@ -85,9 +107,9 @@ Manager::InputChoice Manager::askInput()
 Manager::EncryptionMethod Manager::askMethod()
 {
 	std::cout <<
-		"(c)aesarian fixed offset\n"
-		"(p)seudo-random offset\n"
-		"(s)ubstitution cipher\n"
+		"[C]aesarian fixed offset\n"
+		"[P]seudo-random offset\n"
+		"[S]ubstitution cipher\n"
 		"Which method?";
 
 	while (true) {

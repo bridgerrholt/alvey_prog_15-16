@@ -50,6 +50,9 @@ private:
 
 	InputChoice input_;
 
+	std::string inputFileName_;
+	std::string outputFileName_;
+
 };
 
 }
