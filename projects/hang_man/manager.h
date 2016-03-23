@@ -40,6 +40,8 @@ private:
 		char content;
 	};
 
+	void reset();
+
 	void runGame();
 	void runGuess();
 	bool checkOver(bool& playerWon);
@@ -64,10 +66,6 @@ private:
 
 	// Reads the text file, capturing the several "images".
 	void loadImages();
-
-
-	//InputHandler& inputHandler_;
-	//FailHandler fail_;
 
 	// Path for the file of words.
 	std::string dictionaryFileName_;
@@ -98,8 +96,11 @@ private:
 	std::size_t computerLivesMax_;
 	std::size_t computerLives_;
 
-	int difficulty_;
+	// Whether this instance has ran already.
+	bool alreadyPlayed_;
 
+	// Changes maximum lives.
+	int difficulty_;
 
 	// Path for the file of text images.
 	std::string imagesFileName_;

@@ -54,6 +54,8 @@ Manager::Manager(
 	livesMax_ = 3;
 	computerLivesMax_ = 3;
 
+	alreadyPlayed_ = false;
+
 	loadDictionary();
 	loadImages();
 
@@ -63,44 +65,55 @@ Manager::Manager(
 
 void Manager::run()
 {
-	std::cout <<
-		" 1: Easy\n"
-		" 2: Medium\n"
-		" 3: Hard\n\n"
-		"Select difficulty:";
+	if (alreadyPlayed_) {
+		inputHandler_.printQuestion("Reset scoreboard? (y/n)");
 
-	while (true) {
 		std::string input =
-			getLowered(inputHandler_.askStripped());
-
-		if (!isInteger(input)) {
-			std::cout << "Must be an integer.";
-			continue;
-		}
-
-		difficulty_ = patch::stoi(input);
-		if (difficulty_ < 1 || difficulty_ > 3) {
-			std::cout << "Out of range.";
-			continue;
-		}
-
-		break;
+			getLowered(inputHandler_.askStripped(""));
+		if (input == "y")
+			reset();
 	}
 
+	// Not else, because the previous block may call reset(),
+	// which sets alreadyPlayed_ to false.
+	if (!alreadyPlayed_) {
+		inputHandler_.printQuestion(
+			" 1: Easy\n"
+			" 2: Medium\n"
+			" 3: Hard\n\n"
+			"Select difficulty:");
+
+		while (true) {
+			std::string input =
+				getLowered(inputHandler_.askStripped(""));
+
+			if (!isInteger(input)) {
+				inputHandler_.printQuestion("Must be an integer.");
+				continue;
+			}
+
+			difficulty_ = patch::stoi(input);
+			if (difficulty_ < 1 || difficulty_ > 3) {
+				inputHandler_.printQuestion("Out of range.");
+				continue;
+			}
+
+			break;
+		}
+	}
+
+	runGame();
+
+	alreadyPlayed_ = true;
+}
+
+
+
+void Manager::reset()
+{
 	playerWins_ = 0;
 	computerWins_ = 0;
-
-	while (true) {
-		runGame();
-
-		// Restart if the player requests to.
-		std::string input =
-			getLowered(inputHandler_.askStripped("Reset? (y/n)"));
-		if (input == "y")
-			break;
-	}
-	
-
+	alreadyPlayed_ = false;
 }
 
 
@@ -146,7 +159,8 @@ void Manager::runGame()
 			--lives_;
 		}
 
-		std::cout << std::endl;
+		inputHandler_.askRaw("Press return.");
+		std::cout << '\n';
 	}
 
 	std::cout << "You ";
@@ -163,7 +177,7 @@ void Manager::runGame()
 		++playerWins_;
 	}
 
-	std::cout << "!\n\n";
+	std::cout << "!\n";
 }
 
 
@@ -175,20 +189,20 @@ void Manager::runGuess()
 	displayGuesses();
 
 	// Ask for the guess.
-	std::cout << "\n";
-	std::string input =
-		getLowered(inputHandler_.askStripped("Guess:"));
-	char inputChar = input[0];
+	inputHandler_.printQuestion("\nGuess:");
+	std::string input;
+	char inputChar;
 
 	// Keep asking until they provide a single letter.
 	while (true) {
-		fail_.reset();
+		input = getLowered(inputHandler_.askStripped(""));
+		inputChar = input[0];
 
 		if (input.size() != 1) {
-			fail_.error("Must be 1 letter.");
+			inputHandler_.printQuestion("Must be 1 letter.");
 		}
 		else if (!isalpha(inputChar)) {
-			fail_.error("Must be a letter.");
+			inputHandler_.printQuestion("Must be a letter.");
 		}
 		else {
 			// Error if it was already guessed.
@@ -212,16 +226,13 @@ void Manager::runGuess()
 			}
 
 			if (alreadyGuessed) {
-				fail_.error("Already guessed.");
+				inputHandler_.printQuestion("Already guessed.");
+			}
+			// Break if it misses all the fails.
+			else {
+				break;
 			}
 		}
-
-		if (fail_.get()) {
-			input = getLowered(inputHandler_.askStripped(""));
-			inputChar = input[0];
-		}
-		else
-			break;
 	}
 
 	// Look through the letters to find the guessed letter.
@@ -240,7 +251,6 @@ void Manager::runGuess()
 	}
 
 	std::cout << '\n';
-
 }
 
 
