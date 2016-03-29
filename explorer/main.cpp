@@ -61,6 +61,8 @@ int main(int argc, char* argv[])
 			}
 		}
 
+		std::cout << '\n';
+
 		switch (projectIndex) {
 		case 0:
 			currentManager = std::unique_ptr<Manager>(

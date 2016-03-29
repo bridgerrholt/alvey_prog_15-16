@@ -9,10 +9,16 @@
 #include <get_stripped_input.h>
 #include <get_lowered.h>
 
+#include <functional>
+
 using namespace encryption;
 
 Manager::Manager(const explorer::Manager& baseManager) :
-	explorer::Manager(baseManager)
+	explorer::Manager(baseManager),
+	alphabet_("abcdefghijklmnopqrstuvwxyz"
+			 "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+			 "0123456789"
+			 ",.?! \t\n\r")
 {
 
 }
@@ -22,8 +28,6 @@ Manager::Manager(const explorer::Manager& baseManager) :
 void Manager::run()
 {
 	input_ = askInput();
-	if (input_ == QUIT)
-		return;
 	std::cout << "\n";
 
 	EncryptionMethod method = askMethod();
@@ -31,17 +35,20 @@ void Manager::run()
 	password_ = askPassword();
 	std::cout << "\n";
 
+	std::size_t randHash = std::hash<std::string>{}(password_);
+	srand(randHash);
+
 	std::string fileNameLabel = "input";
-	std::string& fileNameVar = inputFileName_;
 
 	for (std::size_t i = 0; i < 2; ++i) {
 		std::cout << "Enter " + fileNameLabel + " file name:";
+		std::string inputString;
 
 		while (true) {
-			fileNameVar =
+			inputString =
 				inputHandler_.askStripped("", true, std::size_t(1));
 
-			if (fileNameVar == "") {
+			if (inputString == "") {
 				std::cout << "Invalid input.";
 			}
 			else {
@@ -50,11 +57,27 @@ void Manager::run()
 
 		}
 
+		std::string fileName = "projects/encryption/files/" + inputString;
 		if (i == 0) {
+			inputFileName_ = fileName;
 			fileNameLabel = "ouput";
-			fileNameVar = outputFileName_;
+		}
+		else {
+			outputFileName_ = fileName;
 		}
 	};
+	std::cout << "in: " << inputFileName_ << '\n';
+	std::cout << "out: " << outputFileName_ << '\n';
+
+	try {
+		inFile_ = std::ifstream(inputFileName_);
+		outFile_ = std::ofstream(outputFileName_);
+	}
+	catch (std::exception& e) {
+		std::cout << e.what();
+		return;
+	}
+
 
 	switch (method) {
 	case CAESARIAN:
@@ -70,6 +93,9 @@ void Manager::run()
 		break;
 	}
 
+	inFile_.close();
+	outFile_.close();
+
 
 }
 
@@ -79,8 +105,8 @@ Manager::InputChoice Manager::askInput()
 {
 	std::cout <<
 		"[E]ncrypt\n"
-		"[D]ecrypt\n"
-		"[Q]uit\n"
+		"[D]ecrypt\n\n"
+
 		"What would you like to do?";
 
 	while (true) {
@@ -92,9 +118,6 @@ Manager::InputChoice Manager::askInput()
 		}
 		else if (input == "d" || input == "decrypt") {
 			return DECRYPT;
-		}
-		else if (input == "q" || input == "quit") {
-			return QUIT;
 		}
 		else {
 			std::cout << "Invalid input.";
@@ -109,7 +132,8 @@ Manager::EncryptionMethod Manager::askMethod()
 	std::cout <<
 		"[C]aesarian fixed offset\n"
 		"[P]seudo-random offset\n"
-		"[S]ubstitution cipher\n"
+		"[S]ubstitution cipher\n\n"
+
 		"Which method?";
 
 	while (true) {
@@ -153,7 +177,33 @@ std::string Manager::askPassword()
 
 void Manager::runCaesarian()
 {
+	int offset = randRange(1, alphabet_.size());
+	if (input_ == DECRYPT)
+		offset = -offset;
+	std::cout << "Using the offset of " << offset << '\n';
 
+	char currectChar;
+	while (inFile_ >> std::noskipws >> currectChar) {
+		std::string a = std::string(1, currectChar);
+		std::size_t charIndex =
+			alphabet_.find_first_of(a);
+			std::cout << a << '\n';
+
+		std::cout << (charIndex == std::string::npos) << '\n';
+
+		if (charIndex != std::string::npos) {
+			int newIndex = int(charIndex)+offset;
+			if (newIndex >= alphabet_.size())
+				newIndex -= alphabet_.size();
+			else if (newIndex < 0)
+				newIndex += alphabet_.size();
+
+			std::cout << " " << newIndex << '\n';
+
+			outFile_ << alphabet_.at(newIndex);
+			std::cout << alphabet_.at(newIndex);
+		}
+	}
 }
 
 

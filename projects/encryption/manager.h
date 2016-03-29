@@ -4,6 +4,8 @@
 #define ENCRYPTION_MANAGER_H
 
 #include <vector>
+#include <fstream>
+
 #include <input_handler.h>
 
 #include "../explorer/manager.h"
@@ -24,8 +26,7 @@ private:
 	enum InputChoice
 	{
 		ENCRYPT,
-		DECRYPT,
-		QUIT
+		DECRYPT
 	};
 
 	enum EncryptionMethod
@@ -46,12 +47,18 @@ private:
 	// The input handler is made before the manager's construction.
 	//InputHandler& inputHandler_;
 
+	const std::string alphabet_;
+
 	std::string password_;
 
 	InputChoice input_;
 
 	std::string inputFileName_;
 	std::string outputFileName_;
+
+	std::ifstream inFile_;
+	std::ofstream outFile_;
+
 
 };
 
