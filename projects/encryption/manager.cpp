@@ -1,6 +1,7 @@
 #include "manager.h"
 
 #include <iostream>
+#include <cstdlib>
 #include <string>
 #include <array>
 
@@ -70,8 +71,8 @@ void Manager::run()
 	std::cout << "out: " << outputFileName_ << '\n';
 
 	try {
-		inFile_ = std::ifstream(inputFileName_);
-		outFile_ = std::ofstream(outputFileName_);
+		inFile_.open(inputFileName_);
+		outFile_.open(outputFileName_);
 	}
 	catch (std::exception& e) {
 		std::cout << e.what();
@@ -182,26 +183,36 @@ void Manager::runCaesarian()
 		offset = -offset;
 	std::cout << "Using the offset of " << offset << '\n';
 
-	char currectChar;
-	while (inFile_ >> std::noskipws >> currectChar) {
-		std::string a = std::string(1, currectChar);
+	char currentChar;
+	while (inFile_ >> std::noskipws >> currentChar) {
+		std::string a = std::string(1, currentChar);
 		std::size_t charIndex =
 			alphabet_.find_first_of(a);
-			std::cout << a << '\n';
+			//std::cout << a << '\n';
 
-		std::cout << (charIndex == std::string::npos) << '\n';
+		//std::cout << (charIndex == std::string::npos) << '\n';
 
 		if (charIndex != std::string::npos) {
-			int newIndex = int(charIndex)+offset;
+			/*int newIndex = int(charIndex)+offset;
 			if (newIndex >= alphabet_.size())
 				newIndex -= alphabet_.size();
 			else if (newIndex < 0)
-				newIndex += alphabet_.size();
+				newIndex += alphabet_.size();*/
 
-			std::cout << " " << newIndex << '\n';
+			/*int newIndex = int(charIndex)+offset;
+			newIndex %= alphabet_.size();*/
+
+			int newIndex = int(charIndex)+offset;
+			while (newIndex < 0)
+				newIndex += alphabet_.size();
+			while (newIndex >= alphabet_.size())
+				newIndex -= alphabet_.size();
+
+			//std::cout << " " << newIndex << '\n';
+			std::cout << currentChar << " : " << alphabet_.at(newIndex) << "  " << charIndex << " " << newIndex << '\n';
 
 			outFile_ << alphabet_.at(newIndex);
-			std::cout << alphabet_.at(newIndex);
+			//std::cout << alphabet_.at(newIndex);
 		}
 	}
 }
