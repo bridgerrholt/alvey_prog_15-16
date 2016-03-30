@@ -47,8 +47,6 @@ private:
 	// The input handler is made before the manager's construction.
 	//InputHandler& inputHandler_;
 
-	const std::string alphabet_;
-
 	std::string password_;
 
 	InputChoice input_;

@@ -15,11 +15,7 @@
 using namespace encryption;
 
 Manager::Manager(const explorer::Manager& baseManager) :
-	explorer::Manager(baseManager),
-	alphabet_("abcdefghijklmnopqrstuvwxyz"
-			 "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-			 "0123456789"
-			 ",.?! \t\n\r")
+	explorer::Manager(baseManager)
 {
 
 }
@@ -71,8 +67,10 @@ void Manager::run()
 	std::cout << "out: " << outputFileName_ << '\n';
 
 	try {
-		inFile_.open(inputFileName_);
-		outFile_.open(outputFileName_);
+		inFile_.open(inputFileName_.c_str(),
+			std::ios_base::binary);
+		outFile_.open(outputFileName_,
+			std::ios_base::binary);
 	}
 	catch (std::exception& e) {
 		std::cout << e.what();
@@ -185,35 +183,7 @@ void Manager::runCaesarian()
 
 	char currentChar;
 	while (inFile_ >> std::noskipws >> currentChar) {
-		std::string a = std::string(1, currentChar);
-		std::size_t charIndex =
-			alphabet_.find_first_of(a);
-			//std::cout << a << '\n';
-
-		//std::cout << (charIndex == std::string::npos) << '\n';
-
-		if (charIndex != std::string::npos) {
-			/*int newIndex = int(charIndex)+offset;
-			if (newIndex >= alphabet_.size())
-				newIndex -= alphabet_.size();
-			else if (newIndex < 0)
-				newIndex += alphabet_.size();*/
-
-			/*int newIndex = int(charIndex)+offset;
-			newIndex %= alphabet_.size();*/
-
-			int newIndex = int(charIndex)+offset;
-			while (newIndex < 0)
-				newIndex += alphabet_.size();
-			while (newIndex >= alphabet_.size())
-				newIndex -= alphabet_.size();
-
-			//std::cout << " " << newIndex << '\n';
-			std::cout << currentChar << " : " << alphabet_.at(newIndex) << "  " << charIndex << " " << newIndex << '\n';
-
-			outFile_ << alphabet_.at(newIndex);
-			//std::cout << alphabet_.at(newIndex);
-		}
+		outFile_ << char(((unsigned char)currentChar)+offset);
 	}
 }
 
