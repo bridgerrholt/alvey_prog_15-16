@@ -174,12 +174,23 @@ std::string Manager::askPassword()
 
 
 
-void Manager::runCaesarian()
+int Manager::getOffset(bool isDecrypting)
 {
 	// Margins of 10 to make it harder to visually catch on to.
 	int offset = randRange(10, 246);
-	if (input_ == DECRYPT)
+
+	// Go the opposite way for decryptions.
+	if (isDecrypting)
 		offset = -offset;
+
+	return offset;
+}
+
+
+
+void Manager::runCaesarian()
+{
+	int offset = getOffset(input_ == DECRYPT);
 	std::cout << "Using the offset of " << offset << '\n';
 
 	// For each character, add the offset to its binary representation.
@@ -193,15 +204,60 @@ void Manager::runCaesarian()
 
 void Manager::runPseudoRandom()
 {
-
+	// For each character, add a new offset to its binary representation.
+	char currentChar;
+	while (inFile_ >> std::noskipws >> currentChar) {
+		outFile_ << char(((unsigned char)currentChar) +
+			getOffset(input_ == DECRYPT));
+	}
 }
 
 
 
 void Manager::runSubstitution()
 {
+	std::vector<unsigned char> numbersRemaining;
+	std::vector<unsigned char> redirections;
+
+	for (std::size_t i = 0; i < 256; ++i) {
+		numbersRemaining.push_back((unsigned char) i);
+	}
+
+	while (numbersRemaining.size() > 0) {
+		std::size_t remainingIndex = randRange(0, numbersRemaining.size());
+		unsigned char newNumber = numbersRemaining[remainingIndex];
+		numbersRemaining.erase(numbersRemaining.begin() + remainingIndex);
+
+		redirections.push_back(newNumber);
+	}
+
+	char currentChar;
+	while (inFile_ >> std::noskipws >> currentChar) {
+		unsigned char currentCharIndex = (unsigned char) currentChar;
+		char newChar;
+		if (input_ == ENCRYPT) {
+			newChar = char(redirections.at(currentCharIndex));
+		}
+		else {
+			auto index = std::find(
+				redirections.begin(), redirections.end(), currentCharIndex);
+			if (index != redirections.end()) {
+				std::cout << index - redirections.begin();
+				newChar = char(index - redirections.begin());
+			}
+		}
+		outFile_ << newChar;
+	}
+
+
 
 }
+
+
+
+
+
+
 
 
 

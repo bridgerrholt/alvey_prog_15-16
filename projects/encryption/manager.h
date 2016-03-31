@@ -40,6 +40,8 @@ private:
 	EncryptionMethod askMethod();
 	std::string askPassword();
 
+	int getOffset(bool isDecrypting);
+
 	void runCaesarian();
 	void runPseudoRandom();
 	void runSubstitution();
