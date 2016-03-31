@@ -176,11 +176,13 @@ std::string Manager::askPassword()
 
 void Manager::runCaesarian()
 {
-	int offset = randRange(1, alphabet_.size());
+	// Margins of 10 to make it harder to visually catch on to.
+	int offset = randRange(10, 246);
 	if (input_ == DECRYPT)
 		offset = -offset;
 	std::cout << "Using the offset of " << offset << '\n';
 
+	// For each character, add the offset to its binary representation.
 	char currentChar;
 	while (inFile_ >> std::noskipws >> currentChar) {
 		outFile_ << char(((unsigned char)currentChar)+offset);
