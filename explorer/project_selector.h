@@ -7,6 +7,8 @@
 #include <array>
 #include <string>
 
+#include "project_identifier.h"
+
 namespace explorer
 {
 
@@ -18,11 +20,12 @@ public:
 
 	ProjectSelector();
 
-	void pushProject(std::string primary, std::string secondary);
+	void pushProject(std::string primary, std::string secondary,
+		ProjectIdentifier projectIdentifier);
 
 	std::string getFormattedProjects();
 
-	bool findProject(std::string input, std::size_t& projectIndex);
+	bool findProject(std::string input, ProjectIdentifier& projectIdentifier);
 
 
 private:
@@ -30,6 +33,7 @@ private:
 	public:
 		std::string primary;
 		std::string secondary;
+		ProjectIdentifier identifier;
 	};
 
 	std::vector<Project> projects_;

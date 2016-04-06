@@ -9,12 +9,8 @@
 
 #include "manager.h"
 #include "project_selector.h"
-
-#include "binary_search/manager.h"
-#include "encryption/manager.h"
-#include "game_of_pig/manager.h"
-#include "hang_man/manager.h"
-#include "mad_lib_game/manager.h"
+#include "project_identifier.h"
+#include "make_manager.h"
 
 using namespace explorer;
 
@@ -29,11 +25,11 @@ int main(int argc, char* argv[])
 
 	std::unique_ptr<Manager> currentManager;
 	ProjectSelector projectSelector;
-	projectSelector.pushProject("Binary Search", "B");
-	projectSelector.pushProject("Encryption",    "E");
-	projectSelector.pushProject("Game of Pig",   "G");
-	projectSelector.pushProject("Hang Man",      "H");
-	projectSelector.pushProject("Mad Lib Game",  "M");
+	projectSelector.pushProject("Binary Search", "B", BINARY_SEARCH);
+	projectSelector.pushProject("Encryption",    "E", ENCRYPTION);
+	projectSelector.pushProject("Game of Pig",   "G", GAME_OF_PIG);
+	projectSelector.pushProject("Hang Man",      "H", HANG_MAN);
+	projectSelector.pushProject("Mad Lib Game",  "M", MAD_LIB_GAME);
 
 	InputHandler inputHandler = InputHandler(" ");
 	inputHandler.pushDefaultEnding("\n ");
@@ -45,14 +41,14 @@ int main(int argc, char* argv[])
 		inputHandler.printQuestion("Select a project:");
 
 		std::string projectSelection;
-		std::size_t projectIndex;
+		ProjectIdentifier projectIdentifier;
 
 		while (true) {
 			projectSelection = inputHandler.askStripped("");
 
 			// If valid input, stop asking.
 			if (projectSelector.findProject(
-				projectSelection, projectIndex)) {
+				projectSelection, projectIdentifier)) {
 				break;
 			}
 			// Otherwise it's invalid, keep asking.
@@ -63,32 +59,8 @@ int main(int argc, char* argv[])
 
 		std::cout << '\n';
 
-		switch (projectIndex) {
-		case 0:
-			currentManager = std::unique_ptr<Manager>(
-				new binary_search::Manager(baseManager));
-			break;
-		case 1:
-			currentManager = std::unique_ptr<Manager>(
-				new encryption::Manager(baseManager));
-			break;
-		case 2:
-			currentManager = std::unique_ptr<Manager>(
-				new game_of_pig::Manager(baseManager, 100));
-			break;
-		case 3:
-			currentManager = std::unique_ptr<Manager>(
-				new hang_man::Manager(baseManager,
-				"../../dictionaries/american-english-no-accents.txt",
-				"text_images/man.txt"));
-			break;
-		case 4:
-			currentManager = std::unique_ptr<Manager>(
-				new mad_lib::Manager(baseManager, "projects/mad_lib_game/stories/"));
-			break;
-		default:
-			return 0;
-		}
+		currentManager = std::unique_ptr<Manager>(
+			makeManager(baseManager, projectIdentifier));
 
 		bool toQuit = false;
 		while (true) {
