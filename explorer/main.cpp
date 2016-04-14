@@ -16,89 +16,94 @@ using namespace explorer;
 
 int main(int argc, char* argv[])
 {
-	// Seed the RNG with the current time.
-	auto currentDuration =
-		std::chrono::system_clock::now().time_since_epoch();
-	auto currentMilliseconds = std::chrono::duration_cast<
-		std::chrono::milliseconds>(currentDuration).count();
-	srand(currentMilliseconds);
+  // Seed the RNG with the current time.
+  auto currentDuration =
+    std::chrono::system_clock::now().time_since_epoch();
+  auto currentMilliseconds = std::chrono::duration_cast<
+    std::chrono::milliseconds>(currentDuration).count();
+  srand(currentMilliseconds);
 
-	std::unique_ptr<Manager> currentManager;
-	ProjectSelector projectSelector;
-	projectSelector.pushProject("Binary Search", "B", BINARY_SEARCH);
-	projectSelector.pushProject("Encryption",    "E", ENCRYPTION);
-	projectSelector.pushProject("Game of Pig",   "G", GAME_OF_PIG);
-	projectSelector.pushProject("Hang Man",      "H", HANG_MAN);
-	projectSelector.pushProject("Mad Lib Game",  "M", MAD_LIB_GAME);
+  // Define all the projects the player can view.
+  std::unique_ptr<Manager> currentManager;
+  ProjectSelector projectSelector;
+  projectSelector.pushProject("Binary Search", "B", BINARY_SEARCH);
+  projectSelector.pushProject("Encryption",    "E", ENCRYPTION);
+  projectSelector.pushProject("Game of Pig",   "G", GAME_OF_PIG);
+  projectSelector.pushProject("Hang Man",      "H", HANG_MAN);
+  projectSelector.pushProject("Mad Lib Game",  "M", MAD_LIB_GAME);
 
-	InputHandler inputHandler = InputHandler(" ");
-	inputHandler.pushDefaultEnding("\n ");
+  // Define default endings for the input handler.
+  InputHandler inputHandler = InputHandler(" ");
+  inputHandler.pushDefaultEnding("\n ");
 
-	Manager baseManager = Manager(inputHandler);
+  // Pass to every project, contains the input handler.
+  Manager baseManager = Manager(inputHandler);
 
-	while (true) {
-		std::cout << projectSelector.getFormattedProjects() << '\n';
-		inputHandler.printQuestion("Select a project:");
+  while (true) {
+    // Output a list of all the projects.
+    std::cout << projectSelector.getFormattedProjects() << '\n';
+    inputHandler.printQuestion("Select a project:");
 
-		std::string projectSelection;
-		ProjectIdentifier projectIdentifier;
+    std::string projectSelection;
+    ProjectIdentifier projectIdentifier;
 
-		while (true) {
-			projectSelection = inputHandler.askStripped("");
+    while (true) {
+      projectSelection = inputHandler.askStripped("");
 
-			// If valid input, stop asking.
-			if (projectSelector.findProject(
-				projectSelection, projectIdentifier)) {
-				break;
-			}
-			// Otherwise it's invalid, keep asking.
-			else {
-				inputHandler.printQuestion("Invalid input");
-			}
-		}
+      // If valid input, stop asking.
+      if (projectSelector.findProject(
+        projectSelection, projectIdentifier)) {
+        break;
+      }
+      // Otherwise it's invalid, keep asking.
+      else {
+        inputHandler.printQuestion("Invalid input");
+      }
+    }
 
-		std::cout << '\n';
+    std::cout << '\n';
 
-		currentManager = std::unique_ptr<Manager>(
-			makeManager(baseManager, projectIdentifier));
+    /*currentManager = std::unique_ptr<Manager>(
+      makeManager(baseManager, projectIdentifier));*/
+    currentManager = makeManager(baseManager, projectIdentifier);
 
-		bool toQuit = false;
-		while (true) {
-			currentManager->run();
+    bool toQuit = false;
+    while (true) {
+      currentManager->run();
 
-			std::string userInput;
-			inputHandler.printQuestion("\nPlay the [S]ame, [A]nother, or [Q]uit?");
+      std::string userInput;
+      inputHandler.printQuestion("\nPlay the [S]ame, [A]nother, or [Q]uit?");
 
-			bool toPlayAnother = false;
+      bool toPlayAnother = false;
 
-			while (true) {
-				userInput = getLowered(inputHandler.askStripped(""));
+      while (true) {
+        userInput = getLowered(inputHandler.askStripped(""));
 
-				if (userInput == "s") {
-					break;
-				}
-				else if (userInput == "a") {
-					toPlayAnother = true;
-					break;
-				}
-				else if (userInput == "q") {
-					toQuit = true;
-					break;
-				}
-				else {
-					inputHandler.printQuestion("Invalid input");
-				}
-			}
+        if (userInput == "s") {
+          break;
+        }
+        else if (userInput == "a") {
+          toPlayAnother = true;
+          break;
+        }
+        else if (userInput == "q") {
+          toQuit = true;
+          break;
+        }
+        else {
+          inputHandler.printQuestion("Invalid input");
+        }
+      }
 
-			std::cout << "\n";
+      std::cout << "\n";
 
-			if (toPlayAnother || toQuit)
-				break;
-		}
+      if (toPlayAnother || toQuit)
+        break;
+    }
 
-		if (toQuit)
-			break;
-	}
+    if (toQuit)
+      break;
+  }
 
-	return 0;
+  return 0;
 }
