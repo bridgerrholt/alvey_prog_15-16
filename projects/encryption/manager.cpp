@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <string>
 #include <array>
+#include <algorithm>
 
 #include <constants.h>
 #include <rand_range.h>
@@ -240,7 +241,8 @@ void Manager::runSubstitution()
 		}
 		else {
 			auto index = std::find(
-				redirections.begin(), redirections.end(), currentCharIndex);
+				redirections.begin(), redirections.end(),
+				std::size_t(currentCharIndex));
 			if (index != redirections.end()) {
 				std::cout << index - redirections.begin();
 				newChar = char(index - redirections.begin());

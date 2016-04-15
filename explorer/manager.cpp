@@ -3,7 +3,7 @@
 using namespace explorer;
 
 Manager::Manager(InputHandler& inputHandler) :
-	inputHandler_(inputHandler)
+  inputHandler_(inputHandler)
 {
 	
 }

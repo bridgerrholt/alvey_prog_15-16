@@ -1,5 +1,5 @@
 // Given a selected project, selects the correct manager and polymorphically
-// creates it (on the heap due to polymorphism) and returns it.
+// creates it (on the heap) and returns it.
 
 #ifndef MAKE_MANAGER_H
 #define MAKE_MANAGER_H
@@ -11,9 +11,12 @@
 
 // Returns the polymorphic variable, std::move() is not necessary.
 std::unique_ptr<explorer::Manager> makeManager(
+
   // All project managers inherit from explorer::Manager,
-  // requiring a passed manager for construction.
+  // and require a passed explorer::Manager for construction.
   const explorer::Manager& baseManager,
+
+  // An enum representing which project manager should be loaded.
   ProjectIdentifier projectIdentifier);
 
 #endif

@@ -1,4 +1,5 @@
-// A class with several children, one for each project.
+// This class itself has no actual use, however each of its children are
+// used to excecute a project.
 
 #ifndef EXPLORER_MANAGER_H
 #define EXPLORER_MANAGER_H
@@ -13,13 +14,15 @@ namespace explorer
 class Manager
 {
 public:
-	Manager(InputHandler& inputHandler);
+  // There should be one InputHandler across all project managers.
+  Manager(InputHandler& inputHandler);
 
-	virtual void run() {}
+  // For children, runs the body of their specific projects.
+  virtual void run() {}
 
 protected:
-	FailHandler fail_;
-	InputHandler& inputHandler_;
+  FailHandler fail_;
+  InputHandler& inputHandler_;
 
 };
 

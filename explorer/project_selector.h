@@ -4,7 +4,6 @@
 #define PROJECT_SELECTOR_H
 
 #include <vector>
-#include <array>
 #include <string>
 
 #include "project_identifier.h"
@@ -14,31 +13,43 @@ namespace explorer
 
 class ProjectSelector
 {
-public:
-	//typedef std::vector<std::string> NameList;
-	//typedef std::array<std::string, 2> NameList;
+  public:
+    // Represents names for a single project, i.e. what the user can enter
+    // in order to select the desired project (the user can also enter the
+    // ID listed with all the projects).
+    class Project {
+      public:
+        // Both strings are valid input for the given project.
+        std::string primary;
+        std::string secondary;
 
-	ProjectSelector();
+        // Identifies which project the object is meant to represent.
+        ProjectIdentifier identifier;
+    };
 
-	void pushProject(std::string primary, std::string secondary,
-		ProjectIdentifier projectIdentifier);
+    // Takes all the information needed for the creation of a Project object,
+    // which is then pushed to the Project list.
+    void pushProject(
+      const std::string& primary,
+      const std::string& secondary,
+      ProjectIdentifier projectIdentifier);
+    // Takes an already-created project and pushes it.
+    void pushProject(const Project& projectToPush);
 
-	std::string getFormattedProjects();
+    std::string getFormattedProjects();
 
-	bool findProject(std::string input, ProjectIdentifier& projectIdentifier);
-
-
-private:
-	class Project {
-	public:
-		std::string primary;
-		std::string secondary;
-		ProjectIdentifier identifier;
-	};
-
-	std::vector<Project> projects_;
+    // Based on a passed input, checks if it matches any project. If it does
+    // match a project, return true and set the passed reference to that
+    // project's identifier. If it does not match a project, return false.
+    bool findProject(
+      const std::string& input,
+      // May be modified.
+      ProjectIdentifier& projectIdentifierReturn);
 
 
+  private:
+    // All the projects registered in the program.
+    std::vector<Project> projects_;
 };
 
 }
