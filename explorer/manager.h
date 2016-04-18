@@ -1,5 +1,8 @@
-// This class itself has no actual use, however each of its children are
-// used to excecute a project.
+/// Base class for all project managers.
+/**
+ * Has no actual use by itself, however each of its children are
+ * used to excecute a project.
+ */
 
 #ifndef EXPLORER_MANAGER_H
 #define EXPLORER_MANAGER_H
@@ -14,11 +17,16 @@ namespace explorer
 class Manager
 {
 public:
-  // There should be one InputHandler across all project managers.
+  /// Primary constructor
+  /**
+   * Every project manager uses this constructor.
+   * @param[in] inputHandler Every created project manager requires a
+   *       reference to an InputHandler.
+   */
   Manager(InputHandler& inputHandler);
 
-  // For children, runs the body of their specific projects.
-  virtual void run() {}
+  /// Executes the primary functionality of children classes.
+  virtual void run() = 0;
 
 protected:
   FailHandler fail_;

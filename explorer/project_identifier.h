@@ -1,4 +1,8 @@
-// Used to state which project is being used or talked about.
+/// Used to state which project is being used or talked about.
+/**
+ * Each value is another project.
+ * @see makeManager()
+ */
 
 #ifndef PROJECT_IDENTIFIER_H
 #define PROJECT_IDENTIFIER_H
