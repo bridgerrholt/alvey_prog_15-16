@@ -1,3 +1,4 @@
+/** @file make_manager.h */ 
 /// Creates, and returns a pointer to, the specified manager.
 /**
  * Given a ProjectIdentifier, selects the correct manager and creates it in a
