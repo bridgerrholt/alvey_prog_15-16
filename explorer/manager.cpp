@@ -7,3 +7,10 @@ Manager::Manager(InputHandler& inputHandler) :
 {
 	
 }
+
+
+
+void Manager::run()
+{
+  
+}

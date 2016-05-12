@@ -26,7 +26,7 @@ public:
   Manager(InputHandler& inputHandler);
 
   /// Executes the primary functionality of children classes.
-  virtual void run() = 0;
+  virtual void run();
 
 protected:
   FailHandler fail_;
