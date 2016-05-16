@@ -23,6 +23,8 @@ private:
   // The type of number to be used for the range.
   typedef long int Number;
 
+  void getInput();
+
   // Resets variables that must be fresh each run.
   void reset();
 

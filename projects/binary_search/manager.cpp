@@ -27,6 +27,41 @@ Manager::Manager(const explorer::Manager& baseManager) :
 void Manager::run() {
   reset();
 
+  getInput();
+
+  Number answer;
+  while (true) {
+    // Set difference_.
+    calculateDifference();
+
+    // If the maximum is the minimum, that's the answer.
+    if (difference_ == 0) {
+      answer = min_;
+      break;
+    }
+
+    // Otherwise, guess again.
+    makeGuess();
+
+  }
+
+  // Display their answer and the amount of guesses.
+  // Only be plural if multiple guesses.
+  std::string guessString = "guess";
+  if (guessCount_ > 1)
+    guessString += "es";
+
+  //std::cout << ColorCodes::doB("ABC\n");
+
+  std::cout << "\nYour number is " <<
+    ColorCodes::doB(patch::to_string(answer)) << "! (took " <<
+    guessCount_ << " " << guessString << ")\n";
+}
+
+
+
+void Manager::getInput()
+{
   // Ask for the range.
   inputHandler_.printQuestion("Enter the range (min,max):");
   std::string strippedInput;
@@ -39,12 +74,50 @@ void Manager::run() {
     std::string minString = "";
     std::string maxString = "";
 
+    bool minDone = false;
+
     bool foundDivisor = false;
     fail_.reset();
 
     // Parse through, fail if ',' is not found.
     for (auto i = strippedInput.begin(); i != strippedInput.end(); ++i) {
-      // If ',' hasn't been found yet, look for it and
+      if (!minDone) {
+        if (*i == ' ') {
+          if (!minString.empty())
+            minDone = true;
+        }
+        else if (*i == ',') {
+          minDone = true;
+          foundDivisor = true;
+        }
+        else {
+          minString += *i;
+        }
+      }
+
+      else if (!foundDivisor) {
+        if (*i != ' ') {
+          if (*i == ',')
+            foundDivisor = true;
+          else {
+            fail_.error("Expecting divisor (comma)");
+            break;
+          }
+        }
+      }
+
+      else {
+        if (*i == ' ') {
+          if (!maxString.empty())
+            minDone = true;
+        }
+        else {
+          maxString += *i;
+        }
+      }
+
+
+      /*// If ',' hasn't been found yet, look for it and
       // if it's not found add to minString.
       if (!foundDivisor) {
         // If it's not the first
@@ -52,13 +125,19 @@ void Manager::run() {
           foundDivisor = true;
         }
         else {
-          minString += *i;
+          if (*i == ' ') {
+            if (minString.empty())
+              minString += *i;
+            else
+
+          }
         }
       }
+
       // If ',' has been found, add to maxString.
       else {
         maxString += *i;
-      }
+      }*/
     }
 
     // Fail if no ',' was found.
@@ -90,34 +169,6 @@ void Manager::run() {
 
     break;
   }
-
-  Number answer;
-  while (true) {
-    // Set difference_.
-    calculateDifference();
-
-    // If the maximum is the minimum, that's the answer.
-    if (difference_ == 0) {
-      answer = min_;
-      break;
-    }
-
-    // Otherwise, guess again.
-    makeGuess();
-
-  }
-
-  // Display their answer and the amount of guesses.
-  // Only be plural if multiple guesses.
-  std::string guessString = "guess";
-  if (guessCount_ > 1)
-    guessString += "es";
-
-  //std::cout << ColorCodes::doB("ABC\n");
-
-  std::cout << "\nYour number is " <<
-    ColorCodes::doB(patch::to_string(answer)) << "! (took " <<
-    guessCount_ << " " << guessString << ")\n";
 }
 
 

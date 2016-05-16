@@ -16,21 +16,21 @@ namespace explorer
 
 class Manager
 {
-public:
-  /// Primary constructor
-  /**
-   * Every project manager uses this constructor.
-   * @param[in] inputHandler Every created project manager requires a
-   *       reference to an InputHandler.
-   */
-  Manager(InputHandler& inputHandler);
+  public:
+    /// Primary constructor
+    /**
+     * Every project manager uses this constructor.
+     * @param[in] inputHandler Every created project manager requires a
+     *       reference to an InputHandler.
+     */
+    Manager(InputHandler& inputHandler);
 
-  /// Executes the primary functionality of children classes.
-  virtual void run();
+    /// Executes the primary functionality of children classes.
+    virtual void run();
 
-protected:
-  FailHandler fail_;
-  InputHandler& inputHandler_;
+  protected:
+    FailHandler fail_;
+    InputHandler& inputHandler_;
 
 };
 

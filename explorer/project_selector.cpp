@@ -66,5 +66,3 @@ bool ProjectSelector::findProject(
   // No project indicated by the given input was found.
   return false;
 }
-
-
