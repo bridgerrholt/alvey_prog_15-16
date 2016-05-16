@@ -63,7 +63,7 @@ void Manager::run() {
 void Manager::getInput()
 {
   // Ask for the range.
-  inputHandler_.printQuestion("Enter the range (min,max):");
+  inputHandler_.printQuestion("Enter the range (min, max):");
   std::string strippedInput;
 
   // Repeat if failed.
