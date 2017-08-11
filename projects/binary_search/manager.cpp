@@ -220,7 +220,7 @@ Manager::Number Manager::valueToNumber(std::string input, std::string name)
 {
   Number returnNum;
   try {
-    returnNum = patch::stoi(input);
+    returnNum = std::stoi(input);
   }
   catch (std::exception& e) {
     fail_.error("The " + name + " value is out of range.");

@@ -92,7 +92,7 @@ void Manager::run()
 				continue;
 			}
 
-			difficulty_ = patch::stoi(input);
+			difficulty_ = std::stoi(input);
 			if (difficulty_ < 1 || difficulty_ > 3) {
 				inputHandler_.printQuestion("Out of range.");
 				continue;
@@ -431,7 +431,7 @@ void Manager::loadImages()
 	// Image height in lines.
 	std::size_t imageHeight;
 	try {
-		imageHeight = patch::stoi(line);
+		imageHeight = std::stoi(line);
 	}
 	catch (std::exception& e) {
 		std::cout << e.what() << '\n';
