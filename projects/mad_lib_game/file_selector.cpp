@@ -91,18 +91,18 @@ std::string FileSelector::getRandomFileName()
 
 void FileSelector::printData()
 {
-	std::cout << "[";
+	//std::cout << "[";
 	std::size_t index = 0;
 	while (index+1 < remainingIndexes_.size()) {
-		std::cout << remainingIndexes_[index] << ", ";
+		//std::cout << remainingIndexes_[index] << ", ";
 
 		++index;
 	}
 	if (remainingIndexes_.size() > 0) {
-		std::cout << remainingIndexes_[index];
+		//std::cout << remainingIndexes_[index];
 	}
-	std::cout << "]\n";
+	//std::cout << "]\n";
 
-	if (isPreventingFile_)
-		std::cout << "Preventing " << preventedFileIndex_ << '\n';
+	//if (isPreventingFile_)
+		//std::cout << "Preventing " << preventedFileIndex_ << '\n';
 }
